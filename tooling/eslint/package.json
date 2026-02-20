@@ -1,0 +1,11 @@
+{
+	"name": "@repo/eslint",
+	"type": "module",
+	"exports": {
+		"./*": "./*.js"
+	},
+	"devDependencies": {
+		"@typescript-eslint/eslint-plugin": "^8.52.0",
+		"@typescript-eslint/parser": "^8.52.0"
+	}
+}

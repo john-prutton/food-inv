@@ -1,0 +1,29 @@
+{
+	"$schema": "https://turbo.build/schema.json",
+	"ui": "tui",
+	"globalEnv": ["FOOD_INV_*"],
+	"tasks": {
+		"dev": {
+			"persistent": true,
+			"cache": false,
+			"passThroughEnv": ["*"]
+		},
+		"build": {
+			"dependsOn": ["^build"],
+			"outputs": ["dist/"],
+			"passThroughEnv": ["*"]
+		},
+		"test": {
+			"dependsOn": [],
+			"outputs": ["dist/"],
+			"passThroughEnv": ["*"]
+		},
+		"clean": {
+			"persistent": false,
+			"cache": false
+		},
+		"lint": {
+			"dependsOn": ["^lint"]
+		}
+	}
+}

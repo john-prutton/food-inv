@@ -1,0 +1,21 @@
+{
+	"prettier.configPath": "prettier.config.mjs",
+	"files.exclude": {
+		"**/node_modules/": true,
+		"**/.turbo/": true,
+		"**/.tanstack/": true,
+		"**/routeTree.gen.ts": true
+	},
+	"files.watcherExclude": {
+		"**/routeTree.gen.ts": true
+	},
+	"search.exclude": {
+		"**/routeTree.gen.ts": true
+	},
+	"files.readonlyInclude": {
+		"**/routeTree.gen.ts": true
+	},
+	"editor.tabSize": 2,
+	"typescript.tsdk": "./node_modules/typescript/lib",
+	"typescript.enablePromptUseWorkspaceTsdk": true
+}

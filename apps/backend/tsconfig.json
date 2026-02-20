@@ -1,0 +1,13 @@
+{
+	"extends": "@repo/typescript/tsconfig.base.json",
+	"compilerOptions": {
+		"noEmit": true,
+		"baseUrl": ".",
+		"rootDir": "./src",
+		"outDir": "./dist",
+		"paths": {
+			"@/*": ["./src/*", "./src/*/index.js"]
+		}
+	},
+	"include": ["./src/**/*"]
+}

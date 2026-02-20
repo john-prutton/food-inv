@@ -1,0 +1,7 @@
+{
+	"name": "@repo/vitest",
+	"type": "module",
+	"exports": {
+		"./config": "./vitest.config.js"
+	}
+}

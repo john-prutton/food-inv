@@ -1,0 +1,11 @@
+{
+	"extends": "@repo/typescript/tsconfig.base.json",
+	"compilerOptions": {
+		"rootDir": "./src",
+		"outDir": "./dist",
+		"paths": {
+			"@repo/ui/*": ["./src/*.js"]
+		}
+	},
+	"include": ["./src/**/*.ts", "./src/**/*.tsx"]
+}

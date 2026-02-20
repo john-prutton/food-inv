@@ -1,0 +1,31 @@
+{
+	"$schema": "node_modules/syncpack/schema.json",
+	"indent": "\t",
+	"versionGroups": [
+		{
+			"label": "Workspace packages",
+			"dependencies": [
+				"@repo/*"
+			],
+			"pinVersion": "workspace:^"
+		},
+		{
+			"label": "Effect packages",
+			"dependencies": [
+				"effect",
+				"@effect/*"
+			],
+			"pinVersion": "4.0.0-beta.10"
+		},
+		{
+			"label": "React packages",
+			"dependencies": [
+				"react",
+				"react-dom",
+				"@types/react",
+				"@types/react-dom"
+			],
+			"pinVersion": "^19.2.3"
+		}
+	]
+}

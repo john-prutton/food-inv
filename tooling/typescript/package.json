@@ -1,0 +1,6 @@
+{
+	"name": "@repo/typescript",
+	"files": [
+		"tsconfig.base.json"
+	]
+}
