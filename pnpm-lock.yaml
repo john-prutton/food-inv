@@ -148,6 +148,9 @@ importers:
 
   core/ui:
     dependencies:
+      '@tanstack/react-router':
+        specifier: ^1.132.0
+        version: 1.161.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
