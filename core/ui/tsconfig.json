@@ -5,7 +5,8 @@
 		"outDir": "./dist",
 		"paths": {
 			"@repo/ui/*": ["./src/*.js"]
-		}
+		},
+		"lib": ["DOM"]
 	},
 	"include": ["./src/**/*.ts", "./src/**/*.tsx"]
 }

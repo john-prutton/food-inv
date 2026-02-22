@@ -1,13 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router"
 
-import { Button } from "@repo/ui/components/button"
+import { SidebarProvider, SidebarTrigger } from "@repo/ui/components/sidebar"
+
+import { AppSidebar } from "@/components/app-sidebar"
 
 export const Route = createFileRoute("/")({ component: App })
 
 function App() {
 	return (
-		<div className="min-h-screen grid place-content-center">
-			<Button>Hello</Button>
-		</div>
+		<SidebarProvider>
+			<AppSidebar />
+			<main>
+				<SidebarTrigger />
+				testing
+			</main>
+		</SidebarProvider>
 	)
 }
