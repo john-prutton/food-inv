@@ -1,5 +1,12 @@
+import { Link } from "@tanstack/react-router"
+
 import { Button } from "@repo/ui/components/button"
-import { CookIcon, MealIcon } from "@repo/ui/components/icons"
+import {
+	CookIcon,
+	DashboardIcon,
+	InventoryIcon,
+	MealIcon,
+} from "@repo/ui/components/icons"
 import {
 	Sidebar,
 	SidebarContent,
@@ -8,12 +15,14 @@ import {
 	SidebarHeader,
 	SidebarSeparator,
 } from "@repo/ui/components/sidebar"
+import { LinkButton } from "@repo/ui/custom/link-button"
 
 import { Logo } from "./logo"
+import { NavUser } from "./nav-user"
 
 export function AppSidebar() {
 	return (
-		<Sidebar>
+		<Sidebar collapsible="icon">
 			<SidebarHeader>
 				<div className="flex flex-row gap-2 items-end">
 					<Logo className="h-6" />
@@ -25,25 +34,52 @@ export function AppSidebar() {
 				</span>
 			</SidebarHeader>
 
-			<SidebarContent className="space-y-4">
-				<SidebarGroup className="space-y-2">
-					<Button size={"lg"}>
-						<MealIcon />
-						Eat
-					</Button>
+			<SidebarContent className="gap-y-4">
+				<SidebarGroup className="gap-y-2">
+					<Link to=".">
+						<Button size={"lg"} className="w-full">
+							<MealIcon />
+							Eat
+						</Button>
+					</Link>
 
-					<Button variant={"secondary"} size={"lg"}>
-						<CookIcon />
-						Cook
-					</Button>
+					<Link to=".">
+						<Button variant={"secondary"} size={"lg"} className="w-full">
+							<CookIcon />
+							Cook
+						</Button>
+					</Link>
 				</SidebarGroup>
 
 				<SidebarSeparator />
 
-				<SidebarGroup>test</SidebarGroup>
+				<SidebarGroup className="gap-y-2">
+					<LinkButton to="/app">
+						<DashboardIcon />
+						Dashboard
+					</LinkButton>
+
+					<LinkButton to="/app/inventory">
+						<InventoryIcon />
+						Inventory
+					</LinkButton>
+
+					<LinkButton to="/app/meals">
+						<MealIcon />
+						Meals
+					</LinkButton>
+				</SidebarGroup>
 			</SidebarContent>
 
-			<SidebarFooter />
+			<SidebarFooter>
+				<NavUser
+					user={{
+						avatar: "",
+						email: "john@gmail.com",
+						name: "John Roy P",
+					}}
+				/>
+			</SidebarFooter>
 		</Sidebar>
 	)
 }
