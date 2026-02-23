@@ -6,7 +6,7 @@ export { PackageSearch as LogoIcon } from "lucide-react"
 export { Search as SearchIcon } from "lucide-react"
 
 export { ClipboardCheck as ClipboardCheckIcon } from "lucide-react"
-export { CalendarX2 as ExpiringSoonIcon } from "lucide-react"
+export { Clock as ExpiringSoonIcon } from "lucide-react"
 export { Trash2 as WasteIcon } from "lucide-react"
 export { HandPlatter as AvailableFoodIcon } from "lucide-react"
 
