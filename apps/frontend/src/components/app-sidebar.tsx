@@ -1,10 +1,10 @@
 import { Link } from "@tanstack/react-router"
 
-import { Button } from "@repo/ui/components/button"
 import {
 	CookIcon,
 	DashboardIcon,
 	InventoryIcon,
+	LogoIcon,
 	MealIcon,
 } from "@repo/ui/components/icons"
 import {
@@ -13,61 +13,97 @@ import {
 	SidebarFooter,
 	SidebarGroup,
 	SidebarHeader,
+	SidebarMenu,
+	SidebarMenuButton,
+	SidebarMenuItem,
 	SidebarSeparator,
 } from "@repo/ui/components/sidebar"
-import { LinkButton } from "@repo/ui/custom/link-button"
 
-import { Logo } from "./logo"
 import { NavUser } from "./nav-user"
 
 export function AppSidebar() {
 	return (
 		<Sidebar collapsible="icon">
 			<SidebarHeader>
-				<div className="flex flex-row gap-2 items-end">
-					<Logo className="h-6" />
-					<span className="font-bold text-lg leading-[100%]">FoodInv</span>
-				</div>
+				<SidebarMenu>
+					<SidebarMenuItem>
+						<SidebarMenuButton
+							asChild
+							className="bg-transparent! border-0! group-data-[state=expanded]:justify-center group-data-[state=expanded]:h-12"
+						>
+							<Link to="/app">
+								<LogoIcon className="stroke-primary group-data-[state=collapsed]:scale-150 group-data-[state=expanded]:size-6!" />
+								<span className="text-foreground font-bold text-lg leading-[100%] group-data-[state=expanded] group-data-[state=collapsed]:hidden">
+									Food
+									<span className="text-primary">Inv</span>
+								</span>
+							</Link>
+						</SidebarMenuButton>
+					</SidebarMenuItem>
+				</SidebarMenu>
 
-				<span className="text-muted-foreground text-sm!">
+				<span className="text-muted-foreground mx-auto text-sm! group-data-[state=collapsed]:hidden">
 					Food Inventory & Management
 				</span>
 			</SidebarHeader>
 
-			<SidebarContent className="gap-y-4">
-				<SidebarGroup className="gap-y-2">
-					<Link to=".">
-						<Button size={"lg"} className="w-full">
-							<MealIcon />
-							Eat
-						</Button>
-					</Link>
+			<SidebarSeparator className="my-4" />
 
-					<Link to=".">
-						<Button variant={"secondary"} size={"lg"} className="w-full">
-							<CookIcon />
-							Cook
-						</Button>
-					</Link>
+			<SidebarContent className="gap-y-2">
+				<SidebarGroup className="gap-y-2">
+					<SidebarMenu>
+						<SidebarMenuItem>
+							<SidebarMenuButton
+								asChild
+								className="bg-primary! text-foreground! group-data-[state=expanded]:justify-center group-data-[state=expanded]:h-12"
+							>
+								<Link to=".">
+									<MealIcon className="group-data-[state=expanded]:size-6" />
+									Eat
+								</Link>
+							</SidebarMenuButton>
+						</SidebarMenuItem>
+					</SidebarMenu>
+
+					<SidebarMenu>
+						<SidebarMenuItem>
+							<SidebarMenuButton
+								asChild
+								className="bg-secondary! border-0! text-foreground! group-data-[state=expanded]:justify-center group-data-[state=expanded]:h-12"
+							>
+								<Link to=".">
+									<CookIcon className="group-data-[state=expanded]:size-6" />
+									Cook
+								</Link>
+							</SidebarMenuButton>
+						</SidebarMenuItem>
+					</SidebarMenu>
 				</SidebarGroup>
 
 				<SidebarSeparator />
 
 				<SidebarGroup className="gap-y-2">
-					<LinkButton to="/app">
-						<DashboardIcon />
-						Dashboard
-					</LinkButton>
+					<SidebarMenu>
+						<SidebarMenuItem>
+							<SidebarMenuButton asChild>
+								<Link to="/app" activeOptions={{ exact: true }}>
+									<DashboardIcon />
+									<span>Dashboard</span>
+								</Link>
+							</SidebarMenuButton>
+						</SidebarMenuItem>
+					</SidebarMenu>
 
-					<LinkButton to="/app/inventory">
-						<InventoryIcon />
-						Inventory
-					</LinkButton>
-
-					<LinkButton to="/app/meals">
-						<MealIcon />
-						Meals
-					</LinkButton>
+					<SidebarMenu>
+						<SidebarMenuItem>
+							<SidebarMenuButton asChild>
+								<Link to="/app/inventory">
+									<InventoryIcon />
+									Inventory
+								</Link>
+							</SidebarMenuButton>
+						</SidebarMenuItem>
+					</SidebarMenu>
 				</SidebarGroup>
 			</SidebarContent>
 

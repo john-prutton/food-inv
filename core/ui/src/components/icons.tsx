@@ -2,6 +2,7 @@ export { Utensils as MealIcon } from "lucide-react"
 export { CookingPot as CookIcon } from "lucide-react"
 export { LayoutDashboard as DashboardIcon } from "lucide-react"
 export { Archive as InventoryIcon } from "lucide-react"
+export { PackageSearch as LogoIcon } from "lucide-react"
 
 export { CreditCard as CreditCardIcon } from "lucide-react"
 export { EllipsisVertical as DotsVerticalIcon } from "lucide-react"
