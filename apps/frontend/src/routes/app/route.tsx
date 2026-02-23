@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router"
 
-import { SidebarProvider, SidebarTrigger } from "@repo/ui/components/sidebar"
+import { SidebarProvider } from "@repo/ui/components/sidebar"
 
 import { AppSidebar } from "@/components/app-sidebar"
 
@@ -12,10 +12,7 @@ function RouteComponent() {
 	return (
 		<SidebarProvider>
 			<AppSidebar />
-			<main>
-				<SidebarTrigger />
-				<Outlet />
-			</main>
+			<Outlet />
 		</SidebarProvider>
 	)
 }

@@ -47,7 +47,7 @@ export function AppSidebar() {
 				</span>
 			</SidebarHeader>
 
-			<SidebarSeparator className="my-4" />
+			<SidebarSeparator className="my-4 group-data-[state=collapsed]:mt-0" />
 
 			<SidebarContent className="gap-y-2">
 				<SidebarGroup className="gap-y-2">
