@@ -39,10 +39,10 @@ function ExpiringItem({
 
 	const colorLevel =
 		percentageComplete > 0.6
-			? { text: "text-green-500", border: "border-green-500" }
+			? { text: "text-green-500", bg: "bg-green-500" }
 			: percentageComplete > 0.3
-				? { text: "text-orange-500", border: "border-orange-500" }
-				: { text: "text-red-500", border: "border-red-500" }
+				? { text: "text-orange-500", bg: "bg-orange-500" }
+				: { text: "text-red-500", bg: "bg-red-500" }
 
 	return (
 		<Card className="w-full max-w-sm pt-0">
@@ -52,12 +52,12 @@ function ExpiringItem({
 				<CardTitle className="font-bold">{name}</CardTitle>
 				<CardDescription>{description}</CardDescription>
 				<div
-					className={cn("border-2 h-1", colorLevel.border)}
+					className={cn("h-1", colorLevel.bg)}
 					style={{ width: `${percentageComplete * 100}%` }}
 				/>
 			</CardHeader>
 
-			<CardFooter className="text-xs">
+			<CardFooter className="text-xs font-bold">
 				<span>P: {formatDate(purchaseDate)}</span>
 
 				<span className={cn("ml-auto", colorLevel.text)}>
