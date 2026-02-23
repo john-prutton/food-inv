@@ -16,8 +16,11 @@ function RouteComponent() {
 				<SidebarTrigger className="mx-[5px]" />
 
 				<SearchBar />
-				</div>
 			</div>
+
+			<main className="p-10">
+				<StatCards />
+			</main>
 		</div>
 	)
 }
