@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router"
 import { SidebarTrigger } from "@repo/ui/components/sidebar"
 
 import { SearchBar } from "@/components/dashboard/search-bar"
-import { StatCards } from "@/components/dashboard/stat-cards"
+import { StatCards } from "@/components/dashboard/sections/stat-cards"
 
 export const Route = createFileRoute("/app/")({
 	component: RouteComponent,
