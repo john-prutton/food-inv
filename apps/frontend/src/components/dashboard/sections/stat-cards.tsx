@@ -13,7 +13,7 @@ import {
 
 export function StatCards() {
 	return (
-		<div className="flex flex-row gap-4 *:w-full">
+		<div className="@container grid grid-cols-4 gap-4 *:w-full *:col-span-4 *:order-1 *:@sm:col-span-2 *:@lg:col-span-1">
 			<Card size="sm">
 				<CardHeader>
 					<CardTitle className="flex flex-row items-center justify-between">
