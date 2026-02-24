@@ -13,7 +13,8 @@
 			"label": "Effect packages",
 			"dependencies": [
 				"effect",
-				"@effect/*"
+				"@effect/*",
+				"!@effect/language-service"
 			],
 			"pinVersion": "4.0.0-beta.10"
 		},
@@ -26,6 +27,13 @@
 				"@types/react-dom"
 			],
 			"pinVersion": "^19.2.3"
+		},
+		{
+			"label": "Tanstack Router",
+			"dependencies": [
+				"@tanstack/react-router"
+			],
+			"pinVersion": "^1.132.0"
 		}
 	]
 }
