@@ -1,4 +1,3 @@
-import { Button } from "@repo/ui/components/button"
 import {
 	Card,
 	CardDescription,
@@ -7,8 +6,7 @@ import {
 	CardTitle,
 } from "@repo/ui/components/card"
 import { ExpiringSoonIcon } from "@repo/ui/components/icons"
-
-import { cn } from "@/lib/utils"
+import { cn } from "@repo/ui/lib/utils"
 
 function formatDate(date: Date) {
 	return new Intl.DateTimeFormat("en-GB", {
