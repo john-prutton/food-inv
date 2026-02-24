@@ -83,10 +83,10 @@ function ExpiringItem({
 export function ExpiringSoon() {
 	return (
 		<div className="@container space-y-5">
-			<h2 className="flex flex-row items-center gap-2">
+			<div className="flex flex-row items-center gap-2">
 				<ExpiringSoonIcon className="text-red-500" />
-				<span className="text-xl font-semibold">Expiring Soon</span>
-			</h2>
+				<h2 className="text-xl font-semibold">Expiring Soon</h2>
+			</div>
 
 			<div className="grid grid-cols-1 @sm:grid-cols-2 @md:flex @md:flex-row gap-5">
 				<ExpiringItem
