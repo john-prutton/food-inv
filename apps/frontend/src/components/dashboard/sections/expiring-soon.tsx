@@ -46,7 +46,7 @@ function ExpiringItem({
 	}
 
 	return (
-		<Card className="w-full max-w-sm pt-0">
+		<Card className="w-full max-w-sm pt-0 relative">
 			<img src={imgSrc} className="aspect-1/2 h-32 object-cover" />
 
 			<Badge
@@ -81,13 +81,13 @@ function ExpiringItem({
 
 export function ExpiringSoon() {
 	return (
-		<div className="space-y-5">
+		<div className="@container space-y-5">
 			<h2 className="flex flex-row items-center gap-2">
 				<ExpiringSoonIcon className="text-red-500" />
 				<span className="text-xl font-semibold">Expiring Soon</span>
 			</h2>
 
-			<div className="flex flex-row gap-5">
+			<div className="grid grid-cols-1 @sm:grid-cols-2 @md:flex @md:flex-row gap-5">
 				<ExpiringItem
 					name="Milk"
 					imgSrc="https://catalog.sixty60.co.za/v2/files/650d7b3e578d558dfc565ea3?width=320&height=320"
