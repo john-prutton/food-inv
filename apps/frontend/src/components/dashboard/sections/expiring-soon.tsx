@@ -1,3 +1,4 @@
+import { Badge } from "@repo/ui/components/badge"
 import {
 	Card,
 	CardDescription,
@@ -6,7 +7,6 @@ import {
 	CardTitle,
 } from "@repo/ui/components/card"
 import { ExpiringSoonIcon } from "@repo/ui/components/icons"
-import { cn } from "@repo/ui/lib/utils"
 
 function formatDate(date: Date) {
 	return new Intl.DateTimeFormat("en-GB", {
@@ -31,34 +31,47 @@ function ExpiringItem({
 	purchaseDate: Date
 	expirationDate: Date
 }) {
-	const percentageComplete =
-		(expirationDate.getTime() - Date.now()) /
-		(expirationDate.getTime() - purchaseDate.getTime())
+	const msToExpiration = expirationDate.getTime() - Date.now()
+	const percentageExpired =
+		msToExpiration / (expirationDate.getTime() - purchaseDate.getTime())
 
-	const colorLevel =
-		percentageComplete > 0.6
-			? { text: "text-green-500", bg: "bg-green-500" }
-			: percentageComplete > 0.3
-				? { text: "text-orange-500", bg: "bg-orange-500" }
-				: { text: "text-red-500", bg: "bg-red-500" }
+	let tag, color: string
+	if (msToExpiration < 24 * 60 * 60 * 1000) {
+		tag = "Today"
+		color = "var(--color-red-500)"
+	} else {
+		const days = Math.floor(msToExpiration / (24 * 60 * 60 * 1000))
+		tag = `${days} day${days > 1 ? "s" : ""}`
+		color = days > 3 ? "var(--color-green-500)" : "var(--color-orange-500)"
+	}
 
 	return (
 		<Card className="w-full max-w-sm pt-0">
 			<img src={imgSrc} className="aspect-1/2 h-32 object-cover" />
 
+			<Badge
+				className="absolute top-2 right-2 text-background font-semibold"
+				style={{ background: color }}
+			>
+				{tag}
+			</Badge>
+
 			<CardHeader>
 				<CardTitle className="font-bold">{name}</CardTitle>
 				<CardDescription>{description}</CardDescription>
 				<div
-					className={cn("h-1", colorLevel.bg)}
-					style={{ width: `${percentageComplete * 100}%` }}
+					className="h-1"
+					style={{
+						width: `${Math.max(percentageExpired, 0.05) * 100}%`,
+						background: color,
+					}}
 				/>
 			</CardHeader>
 
 			<CardFooter className="text-xs font-bold">
 				<span>P: {formatDate(purchaseDate)}</span>
 
-				<span className={cn("ml-auto", colorLevel.text)}>
+				<span className="ml-auto" style={{ color }}>
 					E: {formatDate(expirationDate)}
 				</span>
 			</CardFooter>
@@ -79,22 +92,24 @@ export function ExpiringSoon() {
 					name="Milk"
 					imgSrc="https://catalog.sixty60.co.za/v2/files/650d7b3e578d558dfc565ea3?width=320&height=320"
 					description="450ml / 2L"
-					purchaseDate={new Date("2026/02/10")}
-					expirationDate={new Date("2026/02/28")}
+					purchaseDate={new Date(Date.now() - 3 * 1000 * 60 * 60 * 24)}
+					expirationDate={new Date()}
 				/>
+
 				<ExpiringItem
 					name="Milk"
 					imgSrc="https://catalog.sixty60.co.za/v2/files/66bb5839bd22036406d32201?width=320&height=320"
 					description="1/2 bag"
-					purchaseDate={new Date("2026/02/18")}
-					expirationDate={new Date("2026/02/28")}
+					purchaseDate={new Date(Date.now() - 3 * 1000 * 60 * 60 * 24)}
+					expirationDate={new Date(Date.now() + 2 * 1000 * 60 * 60 * 24)}
 				/>
+
 				<ExpiringItem
 					name="Milk"
 					imgSrc="https://catalog.sixty60.co.za/v2/files/69959bc80ebe3e9e4a486531?width=320&height=320"
 					description="500g"
-					purchaseDate={new Date("2026/02/23")}
-					expirationDate={new Date("2026/02/28")}
+					purchaseDate={new Date(Date.now() - 3 * 1000 * 60 * 60 * 24)}
+					expirationDate={new Date(Date.now() + 5 * 1000 * 60 * 60 * 24)}
 				/>
 			</div>
 		</div>
