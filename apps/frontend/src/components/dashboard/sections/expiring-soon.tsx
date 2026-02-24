@@ -1,8 +1,9 @@
+import { Link } from "@tanstack/react-router"
+
 import { Badge } from "@repo/ui/components/badge"
 import {
 	Card,
 	CardDescription,
-	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@repo/ui/components/card"
@@ -46,36 +47,36 @@ function ExpiringItem({
 	}
 
 	return (
-		<Card className="w-full max-w-sm pt-0 relative">
-			<img src={imgSrc} className="aspect-1/2 h-32 object-cover" />
+		<Link to="." className="w-full max-w-sm">
+			<Card className="w-full pt-0 relative">
+				<img src={imgSrc} className="aspect-1/2 h-32 object-cover" />
 
-			<Badge
-				className="absolute top-2 right-2 text-background font-semibold"
-				style={{ background: color }}
-			>
-				{tag}
-			</Badge>
+				<Badge
+					className="absolute top-2 right-2 text-background font-semibold"
+					style={{ background: color }}
+				>
+					{tag}
+				</Badge>
 
-			<CardHeader>
-				<CardTitle className="font-bold">{name}</CardTitle>
-				<CardDescription>{description}</CardDescription>
+				<CardHeader>
+					<CardTitle className="font-bold">{name}</CardTitle>
+					<CardDescription>
+						<p>{description}</p>
+						<span className="text-xs font-bold" style={{ color }}>
+							E: {formatDate(expirationDate)}
+						</span>
+					</CardDescription>
+				</CardHeader>
+
 				<div
-					className="h-1"
+					className="h-2 rounded-full absolute bottom-0 min-w-4"
 					style={{
-						width: `${Math.max(percentageExpired, 0.05) * 100}%`,
+						width: `${percentageExpired * 100}%`,
 						background: color,
 					}}
 				/>
-			</CardHeader>
-
-			<CardFooter className="text-xs font-bold">
-				<span>P: {formatDate(purchaseDate)}</span>
-
-				<span className="ml-auto" style={{ color }}>
-					E: {formatDate(expirationDate)}
-				</span>
-			</CardFooter>
-		</Card>
+			</Card>
+		</Link>
 	)
 }
 
