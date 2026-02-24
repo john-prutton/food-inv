@@ -1,0 +1,15 @@
+{
+	"name": "@repo/dep-watcher",
+	"type": "module",
+	"bin": "src/index.js",
+	"scripts": {
+		"clean": "rm -rf dist/*",
+		"lint": "eslint"
+	},
+	"devDependencies": {
+		"@repo/eslint": "workspace:^"
+	},
+	"dependencies": {
+		"chokidar": "^5.0.0"
+	}
+}
