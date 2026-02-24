@@ -10,6 +10,8 @@ export { Clock as ExpiringSoonIcon } from "lucide-react"
 export { Trash2 as WasteIcon } from "lucide-react"
 export { HandPlatter as AvailableFoodIcon } from "lucide-react"
 
+export { Bookmark as BookmarkIcon } from "lucide-react"
+
 export { CreditCard as CreditCardIcon } from "lucide-react"
 export { EllipsisVertical as DotsVerticalIcon } from "lucide-react"
 export { LogOut as LogOutIcon } from "lucide-react"
