@@ -1,0 +1,26 @@
+{
+	"name": "@repo/database",
+	"type": "module",
+	"scripts": {
+		"dev": "nodemon --watch src --ext ts --exec pnpm dep-watcher bash -c \"pnpm clean && pnpm build\"",
+		"build": "pnpm tsc && pnpm tsc-alias",
+		"test": "vitest run || true",
+		"clean": "rm -rf dist/*",
+		"lint": "eslint"
+	},
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"types": "./dist/index.d.ts"
+		}
+	},
+	"devDependencies": {
+		"@repo/dep-watcher": "workspace:^",
+		"@repo/eslint": "workspace:^",
+		"@repo/typescript": "workspace:^",
+		"@repo/vitest": "workspace:^"
+	},
+	"dependencies": {
+		"effect": "4.0.0-beta.10"
+	}
+}

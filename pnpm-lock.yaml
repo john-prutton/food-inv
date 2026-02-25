@@ -152,6 +152,25 @@ importers:
         specifier: ^5.1.4
         version: 5.1.4(typescript@5.9.3)(vite@7.3.1(@types/node@24.10.13)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0)(yaml@2.8.2))
 
+  core/database:
+    dependencies:
+      effect:
+        specifier: 4.0.0-beta.10
+        version: 4.0.0-beta.10
+    devDependencies:
+      '@repo/dep-watcher':
+        specifier: workspace:^
+        version: link:../../tooling/dep-watcher
+      '@repo/eslint':
+        specifier: workspace:^
+        version: link:../../tooling/eslint
+      '@repo/typescript':
+        specifier: workspace:^
+        version: link:../../tooling/typescript
+      '@repo/vitest':
+        specifier: workspace:^
+        version: link:../../tooling/vitest
+
   core/ui:
     dependencies:
       class-variance-authority:
