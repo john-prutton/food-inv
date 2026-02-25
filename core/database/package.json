@@ -18,10 +18,14 @@
 		"@repo/dep-watcher": "workspace:^",
 		"@repo/eslint": "workspace:^",
 		"@repo/typescript": "workspace:^",
-		"@repo/vitest": "workspace:^"
+		"@repo/vitest": "workspace:^",
+		"@types/pg": "^8.16.0",
+		"drizzle-kit": "^0.31.9"
 	},
 	"dependencies": {
 		"@repo/domain": "workspace:^",
-		"effect": "4.0.0-beta.10"
+		"drizzle-orm": "^0.45.1",
+		"effect": "4.0.0-beta.10",
+		"pg": "^8.19.0"
 	}
 }
