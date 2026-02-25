@@ -154,6 +154,9 @@ importers:
 
   core/database:
     dependencies:
+      '@repo/domain':
+        specifier: workspace:^
+        version: link:../../domain
       effect:
         specifier: 4.0.0-beta.10
         version: 4.0.0-beta.10

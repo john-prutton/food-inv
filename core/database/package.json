@@ -21,6 +21,7 @@
 		"@repo/vitest": "workspace:^"
 	},
 	"dependencies": {
+		"@repo/domain": "workspace:^",
 		"effect": "4.0.0-beta.10"
 	}
 }
