@@ -2,11 +2,13 @@
 	"name": "@repo/database",
 	"type": "module",
 	"scripts": {
-		"dev": "nodemon --watch src --ext ts --exec pnpm dep-watcher bash -c \"pnpm clean && pnpm build\"",
+		"dev": "nodemon --watch src --ext ts --exec pnpm dep-watcher bash -c \"pnpm clean && pnpm build && pnpm copy-migrations\"",
 		"build": "pnpm tsc && pnpm tsc-alias",
 		"test": "vitest run",
 		"clean": "rm -rf dist/*",
-		"lint": "eslint"
+		"lint": "eslint",
+		"copy-migrations": "mkdir -p ./dist/migrations && cp ./src/db/migrations/*.sql ./dist/migrations",
+		"db:generate": "drizzle-kit generate"
 	},
 	"exports": {
 		".": {
@@ -23,6 +25,8 @@
 		"drizzle-kit": "^0.31.9"
 	},
 	"dependencies": {
+		"@effect/platform-node": "4.0.0-beta.10",
+		"@effect/sql-pg": "4.0.0-beta.10",
 		"@repo/domain": "workspace:^",
 		"drizzle-orm": "^0.45.1",
 		"effect": "4.0.0-beta.10",
