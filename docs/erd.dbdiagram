@@ -1,0 +1,258 @@
+{
+  "version": "1.0.0",
+  "darkMode": true,
+  "gridEnabling": false,
+  "detailLevel": "All",
+  "tablePositions": [
+    {
+      "name": "MealPortion",
+      "schemaName": "public",
+      "x": 636.7882747717013,
+      "y": -576.8074903666893
+    },
+    {
+      "name": "MealIngredient",
+      "schemaName": "public",
+      "x": 643.5929622717013,
+      "y": -343.2195343416962
+    },
+    {
+      "name": "Meal",
+      "schemaName": "public",
+      "x": 1320.5650491312863,
+      "y": -518.8221234703807
+    },
+    {
+      "name": "InventoryItem",
+      "schemaName": "public",
+      "x": 2090.3718761980444,
+      "y": -15.443664310569375
+    },
+    {
+      "name": "Ingredient",
+      "schemaName": "public",
+      "x": 1594.447208862881,
+      "y": -195.32723326979612
+    },
+    {
+      "name": "NutritionalInformation",
+      "schemaName": "public",
+      "x": 609.7980403967013,
+      "y": -120.90220927212391
+    },
+    {
+      "name": "KitchenUser",
+      "schemaName": "public",
+      "x": 2317.5365259634104,
+      "y": -398.322105110856
+    },
+    {
+      "name": "Kitchen",
+      "schemaName": "public",
+      "x": 2049.227596595575,
+      "y": -310.51793943406085
+    },
+    {
+      "name": "User",
+      "schemaName": "public",
+      "x": 2586.4713790482183,
+      "y": -367.38368709715223
+    },
+    {
+      "name": "Session",
+      "schemaName": "public",
+      "x": 2877.3756204446545,
+      "y": -490.4229521006804
+    },
+    {
+      "name": "OAuthAccounts",
+      "schemaName": "public",
+      "x": 2877.3756204446545,
+      "y": -341.34852402229194
+    }
+  ],
+  "tableGroupCollapseStates": [],
+  "stickyNoteLayouts": [],
+  "referencePaths": [
+    {
+      "firstFieldNames": [
+        "ID"
+      ],
+      "firstTableName": "Meal",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "IDMeal"
+      ],
+      "secondTableName": "MealPortion",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "ID"
+      ],
+      "firstTableName": "Meal",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "IDMeal"
+      ],
+      "secondTableName": "MealIngredient",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "ID"
+      ],
+      "firstTableName": "Ingredient",
+      "firstSchemaName": "public",
+      "firstRelation": "*",
+      "secondFieldNames": [
+        "IDIngredient"
+      ],
+      "secondTableName": "MealIngredient",
+      "secondSchemaName": "public",
+      "secondRelation": "1",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "ID"
+      ],
+      "firstTableName": "Kitchen",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "IDKitchen"
+      ],
+      "secondTableName": "Meal",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "ID"
+      ],
+      "firstTableName": "NutritionalInformation",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "IDNutritionalInformation"
+      ],
+      "secondTableName": "Meal",
+      "secondSchemaName": "public",
+      "secondRelation": "1",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "ID"
+      ],
+      "firstTableName": "Ingredient",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "IDIngredient"
+      ],
+      "secondTableName": "InventoryItem",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "ID"
+      ],
+      "firstTableName": "Kitchen",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "IDKitchen"
+      ],
+      "secondTableName": "Ingredient",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "ID"
+      ],
+      "firstTableName": "NutritionalInformation",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "IDNutritionalInformation"
+      ],
+      "secondTableName": "Ingredient",
+      "secondSchemaName": "public",
+      "secondRelation": "1",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "ID"
+      ],
+      "firstTableName": "Kitchen",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "IDKitchen"
+      ],
+      "secondTableName": "KitchenUser",
+      "secondSchemaName": "public",
+      "secondRelation": "1",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "ID"
+      ],
+      "firstTableName": "User",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "IDUser"
+      ],
+      "secondTableName": "KitchenUser",
+      "secondSchemaName": "public",
+      "secondRelation": "1",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "ID"
+      ],
+      "firstTableName": "User",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "IDUser"
+      ],
+      "secondTableName": "Session",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "ID"
+      ],
+      "firstTableName": "User",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "IDUser"
+      ],
+      "secondTableName": "OAuthAccounts",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    }
+  ]
+}
