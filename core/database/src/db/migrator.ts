@@ -10,7 +10,7 @@ const ReadMigrations = Effect.gen(function* () {
 	const { readDirectory, readFileString } = yield* FileSystem.FileSystem
 	const { join } = yield* Path.Path
 
-	const migrationsDir = join(import.meta.dirname, "./migrations")
+	const migrationsDir = join(process.cwd(), "./migrations")
 	yield* Effect.logDebug("Migrations dir", migrationsDir)
 
 	const migrations = yield* readDirectory(migrationsDir).pipe(
@@ -88,4 +88,6 @@ export const MigrateDatabase = Effect.gen(function* () {
 		Effect.scoped,
 		Effect.provide(PgClient.layer(connectionProperties)),
 	)
-})
+
+	yield* Effect.addFinalizer((exit) => Effect.log("Done with migrations"))
+}).pipe(Effect.scoped)
