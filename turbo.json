@@ -6,7 +6,7 @@
 		"dev": {
 			"persistent": true,
 			"cache": false,
-			"passThroughEnv": ["*"]
+			"passThroughEnv": ["FOOD_INV_*"]
 		},
 		"build": {
 			"dependsOn": ["^build"],

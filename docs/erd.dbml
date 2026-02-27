@@ -1,0 +1,71 @@
+Table MealPortion {
+  ID int [primary key, increment]
+  IDMeal int [not null, Ref: > Meal.ID]
+  CreatedDate Date [not null]
+  Amount decimal [not null]
+}
+
+Table MealIngredient {
+  ID int [primary key, increment]
+  IDMeal int [not null, Ref: > Meal.ID]
+  IDIngredient int [not null, Ref: < Ingredient.ID]
+  Amount decimal [not null]
+}
+
+Table Meal {
+  ID int [primary key, increment]
+  IDKitchen uuid [not null, Ref: > Kitchen.ID]
+  CreatedDate Date [not null]
+  ModifiedDate Date [not null]
+  ActualYield decimal [not null]
+  Remaining decimal [not null]
+  Exhausted bit [not null]
+  ExhaustedDate Date
+  IDNutritionalInformation int [not null, Ref: - NutritionalInformation.ID]
+}
+
+Table InventoryItem {
+  ID int [primary key, increment]
+  IDIngredient int [not null, Ref: > Ingredient.ID ]
+  InitialAmount decimal [not null]
+  CurrentAmount decimal [not null]
+  CreatedDate Date [not null]
+  ExpiryDate Date [not null]
+  ModifiedDate Date [null]
+}
+
+Table Ingredient {
+  ID int [primary key, increment]
+  IDKitchen uuid [not null, Ref: > Kitchen.ID]
+  Name varchar
+  DefaultUnit varchar
+  IDNutritionalInformation int [not null, Ref: - NutritionalInformation.ID ]
+}
+
+Table NutritionalInformation {
+  ID int [primary key, increment]
+  Calories int [not null]
+  // Percentages
+  Protein decimal [not null]
+  Carbohydrate decimal [not null]
+  Fat decimal [not null]
+}
+
+Table KitchenUser {
+  IDKitchen uuid [not null, Ref: - Kitchen.ID]
+  IDUser uuid [not null, Ref: - User.ID]
+  indexes {
+    (IDKitchen, IDUser) [pk]
+  }
+}
+
+Table Kitchen {
+  ID uuid [primary key]
+  CreatedDate Date [not null]
+  ModifiedDate Date [not null]
+}
+
+Table User {
+  ID uuid [primary key]
+  Name varchar [not null]
+}
