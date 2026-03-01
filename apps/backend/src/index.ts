@@ -7,6 +7,8 @@ import * as NodeRuntime from "@effect/platform-node/NodeRuntime"
 
 import { createServer } from "node:http"
 
+import { AuthLive } from "@repo/auth/index.js"
+
 import { ApiRouter } from "./api/index.js"
 import { StaticFilesRouter } from "./static/index.js"
 
@@ -19,6 +21,7 @@ const HttpServer = NodeHttpServer.layer(createServer, {
 })
 
 const RouterLive = HttpRouter.serve(AllRouters).pipe(
+	Layer.provide(AuthLive),
 	Layer.provide(FileSystem),
 	Layer.provide(HttpServer),
 	Layer.provide(NodeHttpPlatform.layer),
