@@ -13,16 +13,11 @@ export { PgPoolClient, PgPoolClientLive } from "./pool.js"
 export const DatabaseLive = Layer.effect(
 	Database,
 	Effect.gen(function* () {
-		{
-			yield* MigrateDatabase
-		}
-
-		const poolClientLive = PgPoolClientLive
-		const drizzleDbLive = DrizzleDbLive.pipe(Layer.provide(poolClientLive))
-		const db = yield* DrizzleDb.asEffect().pipe(Effect.provide(drizzleDbLive))
+		yield* MigrateDatabase
+		const db = yield* DrizzleDb
 
 		return {
 			healthCheck: TryQuery(db.execute("select 1").then(() => true)),
 		}
 	}),
-)
+).pipe(Layer.provide(DrizzleDbLive), Layer.provide(PgPoolClientLive))
