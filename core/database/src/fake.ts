@@ -6,7 +6,7 @@ import { Database } from "@repo/domain/services/database"
 export const DatabaseFake = Layer.succeed(
 	Database,
 	Database.of({
-		healthCheck: Effect.succeed(true),
+		healthCheck: () => Effect.succeed(true),
 		auth: {
 			createSession: () => Effect.void,
 			recordUserOAuthProvider: () => Effect.void,
