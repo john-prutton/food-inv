@@ -4,6 +4,7 @@ import * as HttpApiGroup from "effect/unstable/httpapi/HttpApiGroup"
 
 import { OAuthProviderSchema } from "@/schema/auth/index.js"
 import { AuthError } from "@/services/auth/index.js"
+import { DatabaseError } from "@/services/database/index.js"
 
 export class AuthApiGroup extends HttpApiGroup.make("auth")
 	.add(
@@ -17,7 +18,7 @@ export class AuthApiGroup extends HttpApiGroup.make("auth")
 
 	.add(
 		HttpApiEndpoint.get("callback", "/callback/:provider", {
-			error: AuthError,
+			error: Schema.Union([AuthError, DatabaseError]),
 			query: Schema.Any,
 			params: {
 				provider: OAuthProviderSchema,
