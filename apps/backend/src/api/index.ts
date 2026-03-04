@@ -7,12 +7,25 @@ import * as HttpServerResponse from "effect/unstable/http/HttpServerResponse"
 import * as HttpApiBuilder from "effect/unstable/httpapi/HttpApiBuilder"
 
 import { Api } from "@repo/domain/api"
+import { HealthApiError } from "@repo/domain/schema/health/index.js"
 import { Auth, AuthError } from "@repo/domain/services/auth/index.js"
+import { Database } from "@repo/domain/services/database/index.js"
 
 const HealthApiGroupLive = HttpApiBuilder.group(Api, "Health", (handler) =>
 	handler.handle("health", () =>
 		Effect.gen(function* () {
-			return { healthy: true }
+			const db = yield* Database
+			const healthy = yield* db
+				.healthCheck()
+				.pipe(
+					Effect.catchTag("DatabaseError", (e) =>
+						Effect.fail(new HealthApiError()),
+					),
+				)
+
+			return {
+				healthy,
+			}
 		}),
 	),
 )
