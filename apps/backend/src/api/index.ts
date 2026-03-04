@@ -2,7 +2,7 @@ import * as Config from "effect/Config"
 import * as Effect from "effect/Effect"
 import * as Layer from "effect/Layer"
 import * as HttpEffect from "effect/unstable/http/HttpEffect"
-import * as HttpServerRequest from "effect/unstable/http/HttpServerRequest"
+import * as HttpServerError from "effect/unstable/http/HttpServerError"
 import * as HttpServerResponse from "effect/unstable/http/HttpServerResponse"
 import * as HttpApiBuilder from "effect/unstable/httpapi/HttpApiBuilder"
 
@@ -69,8 +69,86 @@ const AuthApiGroupLive = HttpApiBuilder.group(Api, "auth", (handler) =>
 
 		.handle("callback", ({ request, params: { provider } }) =>
 			Effect.gen(function* () {
+				const isProduction =
+					(yield* Config.string("NODE_ENV")
+						.asEffect()
+						.pipe(
+							Effect.catchTag("ConfigError", () =>
+								Effect.fail(
+									new AuthError({ message: "Failed to get NODE_ENV" }),
+								),
+							),
+						)) === "production"
 				const auth = yield* Auth
-				yield* auth.oauth.validateAuthorizationCallback(provider, request)
+				const { id: providerUserId, ...oauthUser } =
+					yield* auth.oauth.validateAuthorizationCallback(provider, request)
+
+				const db = yield* Database
+				let user = yield* db.user.getUserByEmail(oauthUser.email)
+
+				if (user === null) {
+					const userId = yield* db.user.createUser(oauthUser)
+					user = { id: userId, ...oauthUser }
+				}
+
+				yield* db.auth.recordUserOAuthProvider(
+					user.id,
+					providerUserId,
+					provider,
+				)
+
+				const { token, session } = yield* auth.createSession(user.id)
+				yield* db.auth.createSession(session)
+
+				yield* HttpEffect.appendPreResponseHandler((request, response) =>
+					Effect.gen(function* () {
+						let resp = response
+						const oauthCookies = Object.keys(request.cookies).filter((name) =>
+							name.includes("_oauth_"),
+						)
+
+						for (const oauthCookie of oauthCookies) {
+							resp = yield* HttpServerResponse.setCookie(
+								resp,
+								oauthCookie,
+								token,
+								{
+									httpOnly: true,
+									path: "/",
+									secure: isProduction,
+									sameSite: "lax",
+									maxAge: 0,
+								},
+							)
+						}
+
+						resp = yield* HttpServerResponse.setCookie(resp, "session", token, {
+							httpOnly: true,
+							path: "/",
+							secure: isProduction,
+							sameSite: "lax",
+							expires: session.expirationDate,
+						})
+
+						return resp
+					}).pipe(
+						Effect.catchTag("CookieError", () =>
+							Effect.fail(
+								new HttpServerError.HttpServerError({
+									reason: new HttpServerError.ResponseError({
+										request,
+										response,
+										description: "Failed to set/remove cookies on response",
+									}),
+								}),
+							),
+						),
+					),
+				)
+
+				return HttpServerResponse.redirect("http://localhost:3000", {
+					status: 302,
+				})
 			}),
 		)
 
