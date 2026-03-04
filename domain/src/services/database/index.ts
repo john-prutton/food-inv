@@ -18,7 +18,7 @@ type DatabaseQuery<T> = Effect.Effect<T, DatabaseError>
 export class Database extends ServiceMap.Service<
 	Database,
 	{
-		readonly healthCheck: DatabaseQuery<true>
+		readonly healthCheck: () => DatabaseQuery<true>
 
 		readonly user: {
 			readonly getUserByEmail: (email: Email) => DatabaseQuery<User | null>

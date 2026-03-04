@@ -17,7 +17,8 @@ export const DatabaseLive = Layer.effect(
 		const db = yield* DrizzleDb
 
 		return {
-			healthCheck: TryQuery(db.execute("select 1").then(() => true)),
+			healthCheck: () => TryQuery(db.execute("select 1").then(() => true)),
+
 		}
 	}),
 ).pipe(Layer.provide(DrizzleDbLive), Layer.provide(PgPoolClientLive))
