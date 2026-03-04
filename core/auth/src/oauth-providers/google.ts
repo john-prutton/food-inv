@@ -14,7 +14,7 @@ import {
 	Google,
 } from "arctic"
 
-import { UserSchema, type User } from "@repo/domain/schema/user/index.js"
+import { UserSchema } from "@repo/domain/schema/user/index.js"
 
 import { OAuthError, OAuthProvider } from "./index.js"
 
@@ -31,6 +31,7 @@ const GoogleClaimsToUser = GoogleClaimsSchema.pipe(
 			...claims,
 			id: claims.sub,
 			avatarUrl: claims.picture,
+			createdAt: new Date(0),
 		})),
 
 		encode: SchemaGetter.fail(
