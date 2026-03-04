@@ -37,7 +37,7 @@ const AuthApiGroupLive = HttpApiBuilder.group(Api, "auth", (handler) =>
 				const isProduction = yield* Config.string("NODE_ENV")
 					.asEffect()
 					.pipe(
-						Effect.catchTag("ConfigError", (e) => Effect.die(e)),
+						Effect.catchTag("ConfigError", () => Effect.succeed("development")),
 						Effect.map((env) => env === "production"),
 					)
 				const auth = yield* Auth
@@ -45,8 +45,6 @@ const AuthApiGroupLive = HttpApiBuilder.group(Api, "auth", (handler) =>
 
 				const { cookies, url } =
 					yield* auth.oauth.generateCookiesAndAuthorizationUrl(provider)
-
-				yield* Effect.log(cookies)
 
 				yield* HttpEffect.appendPreResponseHandler((_req, response) =>
 					HttpServerResponse.setCookies(
