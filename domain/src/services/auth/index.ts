@@ -66,7 +66,7 @@ export class Auth extends ServiceMap.Service<
 			readonly validateAuthorizationCallback: (
 				provider: OAuthProvider,
 				request: HttpServerRequest.HttpServerRequest,
-			) => Effect.Effect<{ email: string; providerId: string }, AuthError>
+			) => Effect.Effect<User, AuthError>
 		}
 	}
 >()("Auth") {}
