@@ -68,6 +68,7 @@ Table Kitchen {
 Table User {
   ID uuid [primary key]
   Name varchar [not null]
+  Email varchar [not null]
   AvatarUrl varchar [null]
   CreatedDate Date [not null]
 }

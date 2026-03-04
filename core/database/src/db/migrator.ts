@@ -88,7 +88,7 @@ export const MigrateDatabase = Effect.gen(function* () {
 	)
 
 	yield* RunMigrations.pipe(
-		Effect.scoped,
 		Effect.provide(PgClient.layer(connectionProperties)),
+		Effect.scoped,
 	)
 }).pipe(Effect.scoped)
