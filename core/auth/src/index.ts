@@ -127,7 +127,7 @@ export const AuthLive = Layer.effect(
 								),
 							)
 
-						return yield* new AuthError({ message: "not implemented" })
+						return user
 					},
 				),
 			},
