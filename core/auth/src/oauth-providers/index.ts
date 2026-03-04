@@ -22,7 +22,7 @@ export class OAuthProvider extends ServiceMap.Service<
 		}>
 		readonly validateAuthorizationCallback: (
 			request: HttpServerRequest.HttpServerRequest,
-		) => Effect.Effect<Omit<User, "id">, OAuthError>
+		) => Effect.Effect<User, OAuthError>
 	}
 >()("OAuthProvider") {}
 
