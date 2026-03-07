@@ -1,26 +1,39 @@
+import { useAtomValue } from "@effect/atom-react"
+
 import { createFileRoute } from "@tanstack/react-router"
 
 import { Button } from "@repo/ui/components/button"
 
-import { useAuth } from "@/lib/auth"
+import { authAtom } from "@/lib/auth/atoms"
 
 export const Route = createFileRoute("/")({ component: App })
 function App() {
-	const auth = useAuth()
+	const auth = useAtomValue(authAtom)
 
-	if (auth.state === "loading") return "Checking auth state..."
+	let content: React.ReactNode
+	if (auth.state === "loading") content = "Checking auth state..."
 
 	if (auth.state === "unauthenticated")
-		return (
+		content = (
 			<Button onClick={() => auth.login("google")}>Login with Google</Button>
 		)
 
-	const user = auth.user!
+	if (auth.state === "authenticated") {
+		const user = auth.user
+
+		content = (
+			<>
+				<img className="size-8 rounded-full" src={user.avatarUrl!} />
+				<p>{user.name}</p>
+			</>
+		)
+	}
 
 	return (
-		<div>
-			<p>{user.name}</p>
-			<img src={user.avatarUrl!} />
-		</div>
+		<main className="h-screen grid place-content-center">
+			<div className="flex flex-row items-center gap-x-2 shadow p-2 rounded-lg bg-secondary">
+				{content}
+			</div>
+		</main>
 	)
 }
