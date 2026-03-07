@@ -1,11 +1,10 @@
-import { Console, Effect } from "effect" // Add Console for console.error
-
+import * as Effect from "effect/Effect"
 import * as AsyncResult from "effect/unstable/reactivity/AsyncResult"
 import * as Atom from "effect/unstable/reactivity/Atom"
 
 import type { OAuthProvider } from "@repo/domain/schema/auth/index.js"
 
-import { ApiClient } from "../api-client" // Assuming ApiClient has been updated to ServiceMap.Service if necessary
+import { ApiClient } from "../api-client"
 
 export const login = (provider: OAuthProvider) => {
 	const redirectUrl = document.location.href
@@ -25,17 +24,13 @@ export const userAtom = Atom.make(
 
 		return user
 	}).pipe(
-		Effect.catch(
-			(
-				e, // Renamed from Effect.catchAll
-			) =>
-				Console.error("Failed to fetch", e).pipe(
-					// Using Effect's Console service
-					Effect.andThen(Effect.fail(e)),
-				),
+		Effect.catch((e) =>
+			Effect.logError("Failed to fetch", e).pipe(
+				Effect.andThen(Effect.fail(e)),
+			),
 		),
 	),
-)
+).pipe(Atom.withRefresh("5 seconds"))
 
 export const authAtom = Atom.make((get) => {
 	const userAsyncResult = get(userAtom)

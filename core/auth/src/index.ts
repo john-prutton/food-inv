@@ -73,13 +73,22 @@ export const AuthLive = Layer.effect(
 					if (
 						userSession.session.expirationDate.getTime() <
 						Date.now() + SESSION_DURATION / 2
-					)
+					) {
 						yield* db.auth
 							.refreshSession(
 								userSession.session.id,
 								new Date(Date.now() + SESSION_DURATION),
 							)
 							.pipe(Effect.catchTag("DatabaseError", Effect.logError))
+
+						return {
+							...userSession,
+							session: {
+								...userSession.session,
+								expirationDate: new Date(Date.now() + SESSION_DURATION),
+							},
+						}
+					}
 
 					return userSession
 				}).pipe(
