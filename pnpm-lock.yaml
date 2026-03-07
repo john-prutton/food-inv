@@ -87,6 +87,12 @@ importers:
 
   apps/frontend:
     dependencies:
+      '@effect/platform-browser':
+        specifier: 4.0.0-beta.27
+        version: 4.0.0-beta.27(effect@4.0.0-beta.10)
+      '@repo/domain':
+        specifier: workspace:^
+        version: link:../../domain
       '@repo/ui':
         specifier: workspace:^
         version: link:../../core/ui
@@ -533,6 +539,11 @@ packages:
   '@effect/language-service@0.75.1':
     resolution: {integrity: sha512-g9xD2tAQgRFpYC2YgpZq02VeSL5fBbFJ0B/g1o+14NuNmwtaYJc7SjiLWAA9eyhJHosNrn6h1Ye+Kx6j5mN0AA==}
     hasBin: true
+
+  '@effect/platform-browser@4.0.0-beta.27':
+    resolution: {integrity: sha512-W1zwUyv2s28A6cSym6+D4nE2KF1YfOsI7iKIyKgNSAsXIbmJIDoPHahVlUzTiptYzPhZ1JPbkfcrYXDxJMAmQQ==}
+    peerDependencies:
+      effect: ^4.0.0-beta.27
 
   '@effect/platform-node-shared@4.0.0-beta.10':
     resolution: {integrity: sha512-gBSeOG2bfchXFdgdi5oipHKynOzSd7BlzTy5QcjFOoCUTtLP9igqohPB9hTkV3a6seWE2JJqsgsQ79VuLb7fAg==}
@@ -5339,6 +5350,11 @@ snapshots:
       '@noble/ciphers': 1.3.0
 
   '@effect/language-service@0.75.1': {}
+
+  '@effect/platform-browser@4.0.0-beta.27(effect@4.0.0-beta.10)':
+    dependencies:
+      effect: 4.0.0-beta.10
+      multipasta: 0.2.7
 
   '@effect/platform-node-shared@4.0.0-beta.10(effect@4.0.0-beta.10)':
     dependencies:

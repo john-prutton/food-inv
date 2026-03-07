@@ -13,6 +13,8 @@
 		"lint": "eslint"
 	},
 	"dependencies": {
+		"@effect/platform-browser": "4.0.0-beta.27",
+		"@repo/domain": "workspace:^",
 		"@repo/ui": "workspace:^",
 		"@tailwindcss/vite": "^4.1.18",
 		"@tanstack/react-devtools": "^0.7.0",
