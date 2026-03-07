@@ -20,6 +20,14 @@ export class AuthError extends Schema.TaggedErrorClass<AuthError>()(
 	},
 ) {}
 
+export class UnauthenticatedError extends Schema.TaggedErrorClass<UnauthenticatedError>()(
+	"UnauthenticatedError",
+	{},
+	{
+		httpApiStatus: 401,
+	},
+) {}
+
 export class Auth extends ServiceMap.Service<
 	Auth,
 	{
@@ -36,7 +44,7 @@ export class Auth extends ServiceMap.Service<
 				session: Session
 				user: User
 			},
-			AuthError
+			AuthError | UnauthenticatedError
 		>
 
 		readonly invalidateSession: (
