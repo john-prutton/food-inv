@@ -1,11 +1,17 @@
-import { date, pgTable, primaryKey, uuid, varchar } from "drizzle-orm/pg-core"
+import {
+	pgTable,
+	primaryKey,
+	timestamp,
+	uuid,
+	varchar,
+} from "drizzle-orm/pg-core"
 
 export const usersTable = pgTable("users", {
 	id: uuid("id").primaryKey().defaultRandom(),
 	name: varchar("name", { length: 25 }).notNull(),
 	email: varchar("email", { length: 255 }).notNull().unique(),
 	avatarUrl: varchar("avatar_url", { length: 250 }),
-	createdAt: date("created_at", { mode: "date" }).notNull().defaultNow(),
+	createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
 })
 
 export const sessionsTable = pgTable("sessions", {
@@ -13,7 +19,7 @@ export const sessionsTable = pgTable("sessions", {
 	userId: uuid("user_id")
 		.references(() => usersTable.id, { onDelete: "cascade" })
 		.notNull(),
-	expirationDate: date("expires_at", { mode: "date" }).notNull(),
+	expirationDate: timestamp("expires_at", { mode: "date" }).notNull(),
 })
 
 export const oauthAccountsTable = pgTable(
