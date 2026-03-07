@@ -32,6 +32,13 @@ export class Database extends ServiceMap.Service<
 				oauthProviderUserId: string,
 				oauthProvider: OAuthProvider,
 			) => DatabaseQuery<void>
+			readonly getUserSessionByToken: (
+				token: Session["id"],
+			) => DatabaseQuery<{ session: Session; user: User } | null>
+			readonly refreshSession: (
+				sessionId: Session["id"],
+				expiration: Session["expirationDate"],
+			) => DatabaseQuery<void>
 		}
 	}
 >()("Database") {}

@@ -60,6 +60,24 @@ export const DatabaseLive = Layer.effect(
 							})
 							.onConflictDoNothing(),
 					),
+
+				getUserSessionByToken: (token) =>
+					TryQuery(
+						db
+							.select({ user: usersTable, session: sessionsTable })
+							.from(sessionsTable)
+							.innerJoin(usersTable, eq(usersTable.id, sessionsTable.userId))
+							.where(eq(sessionsTable.id, token))
+							.then(([res]) => res ?? null),
+					),
+
+				refreshSession: (sessionId, expiration) =>
+					TryQuery(
+						db
+							.update(sessionsTable)
+							.set({ expirationDate: expiration })
+							.where(eq(sessionsTable.id, sessionId)),
+					),
 			},
 		}
 	}),

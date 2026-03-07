@@ -10,6 +10,8 @@ export const DatabaseFake = Layer.succeed(
 		auth: {
 			createSession: () => Effect.void,
 			recordUserOAuthProvider: () => Effect.void,
+			getUserSessionByToken: () => Effect.succeed(null),
+			refreshSession: () => Effect.void,
 		},
 		user: {
 			createUser: () => Effect.succeed("user-id"),
