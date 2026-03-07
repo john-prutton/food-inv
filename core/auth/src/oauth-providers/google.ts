@@ -31,7 +31,7 @@ const GoogleClaimsToUser = GoogleClaimsSchema.pipe(
 			...claims,
 			id: claims.sub,
 			avatarUrl: claims.picture,
-			createdAt: new Date(0),
+			createdAt: 0,
 		})),
 
 		encode: SchemaGetter.fail(
