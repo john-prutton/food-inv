@@ -19,8 +19,8 @@ const HttpServer = NodeHttpServer.layer(createServer, {
 })
 
 const RouterLive = HttpRouter.serve(AllRouters).pipe(
-	Layer.provide(DatabaseLive),
 	Layer.provide(AuthLive),
+	Layer.provide(DatabaseLive),
 	Layer.provide(HttpServer),
 	Layer.provide(NodeHttpPlatform.layer),
 	Layer.orDie,

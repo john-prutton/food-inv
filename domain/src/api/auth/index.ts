@@ -3,7 +3,8 @@ import * as HttpApiEndpoint from "effect/unstable/httpapi/HttpApiEndpoint"
 import * as HttpApiGroup from "effect/unstable/httpapi/HttpApiGroup"
 
 import { OAuthProviderSchema } from "@/schema/auth/index.js"
-import { AuthError } from "@/services/auth/index.js"
+import { UserSchema } from "@/schema/user/index.js"
+import { AuthError, UnauthenticatedError } from "@/services/auth/index.js"
 import { DatabaseError } from "@/services/database/index.js"
 
 export class AuthApiGroup extends HttpApiGroup.make("auth")
@@ -27,11 +28,10 @@ export class AuthApiGroup extends HttpApiGroup.make("auth")
 	)
 
 	.add(
-		HttpApiEndpoint.get("testCookie", "/test", {
-			success: Schema.Json,
+		HttpApiEndpoint.get("me", "/me", {
+			success: UserSchema,
+			error: UnauthenticatedError,
 		}),
 	)
-
-	// .add(HttpApiEndpoint.post("logout", "/logout"))
 
 	.prefix("/auth") {}

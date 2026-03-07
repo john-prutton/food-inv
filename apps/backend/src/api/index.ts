@@ -8,7 +8,11 @@ import * as HttpApiBuilder from "effect/unstable/httpapi/HttpApiBuilder"
 
 import { Api } from "@repo/domain/api"
 import { HealthApiError } from "@repo/domain/schema/health/index.js"
-import { Auth, AuthError } from "@repo/domain/services/auth/index.js"
+import {
+	Auth,
+	AuthError,
+	UnauthenticatedError,
+} from "@repo/domain/services/auth/index.js"
 import { Database } from "@repo/domain/services/database/index.js"
 
 const HealthApiGroupLive = HttpApiBuilder.group(Api, "Health", (handler) =>
@@ -152,11 +156,23 @@ const AuthApiGroupLive = HttpApiBuilder.group(Api, "auth", (handler) =>
 			}),
 		)
 
-		.handle("testCookie", ({ request }) =>
+		.handle("me", ({ request }) =>
 			Effect.gen(function* () {
-				yield* Effect.log(request.cookies)
+				const sessionToken = request.cookies["session"]
+				if (!sessionToken) return yield* new UnauthenticatedError()
 
-				return JSON.stringify(request.cookies)
+				const auth = yield* Auth
+				const userSession = yield* auth
+					.validateSession(sessionToken)
+					.pipe(
+						Effect.catchTag("AuthError", (e) =>
+							Effect.logError(e).pipe(
+								Effect.andThen(Effect.fail(new UnauthenticatedError())),
+							),
+						),
+					)
+
+				return userSession.user
 			}),
 		),
 )
