@@ -16,7 +16,9 @@ import {
 	AuthError,
 	AuthMiddleware,
 	CurrentUser,
+	UnauthenticatedError,
 } from "@repo/domain/services/auth"
+import { Database } from "@repo/domain/services/database"
 
 import { OAuthProviders } from "./oauth-providers/index.js"
 import { OAuthProvidersLive } from "./oauth-providers/oauth-providers.js"
@@ -26,6 +28,7 @@ const SESSION_DURATION = 1000 * 60 * 60 * 24 * 30
 export const AuthLive = Layer.effect(
 	Auth,
 	Effect.gen(function* () {
+		const db = yield* Database
 		const isProduction = (yield* Config.string("NODE_ENV")) === "production"
 		const oauthProviders = yield* OAuthProviders.asEffect().pipe(
 			Effect.provide(OAuthProvidersLive),
@@ -58,11 +61,36 @@ export const AuthLive = Layer.effect(
 				}
 			}),
 
-			validateSession: Effect.fn(function* (token) {
-				return yield* new AuthError({ message: "not implemented" })
+			validateSession: (token) =>
+				Effect.gen(function* () {
+					const tokenHash = yield* hashSessionToken(token)
+					const userSession = yield* db.auth.getUserSessionByToken(tokenHash)
+					if (!userSession) return yield* new UnauthenticatedError()
 
-				const sessionId = hashSessionToken(token)
-			}),
+					if (userSession.session.expirationDate.getTime() < Date.now())
+						return yield* new UnauthenticatedError()
+
+					if (
+						userSession.session.expirationDate.getTime() <
+						Date.now() + SESSION_DURATION / 2
+					)
+						yield* db.auth
+							.refreshSession(
+								userSession.session.id,
+								new Date(Date.now() + SESSION_DURATION),
+							)
+							.pipe(Effect.catchTag("DatabaseError", Effect.logError))
+
+					return userSession
+				}).pipe(
+					Effect.catchTag("DatabaseError", (e) =>
+						Effect.fail(
+							new AuthError({
+								message: `Failed to validate session: ${e.message}`,
+							}),
+						),
+					),
+				),
 
 			invalidateSession: Effect.fn(function* (token) {
 				return yield* new AuthError({ message: "not implemented" })
