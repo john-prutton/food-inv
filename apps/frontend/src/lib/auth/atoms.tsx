@@ -3,18 +3,18 @@ import * as Effect from "effect/Effect"
 import * as AsyncResult from "effect/unstable/reactivity/AsyncResult"
 import * as Atom from "effect/unstable/reactivity/Atom"
 
-import type { OAuthProvider } from "@repo/domain/schema/auth/index.js"
+import { redirect } from "@tanstack/react-router"
+
 import { UserSchema } from "@repo/domain/schema/user/index.js"
 import type { User } from "@repo/domain/schema/user/index.js"
 
 import { ApiClient } from "../api-client"
 
-export const login = (provider: OAuthProvider) => {
-	const redirectUrl = document.location.href
-
-	window.location.href = `http://localhost:3001/api/auth/login/${provider}?redirectUrl=${encodeURIComponent(
-		redirectUrl,
-	)}`
+export const login = () => {
+	redirect({
+		to: "/auth/login",
+		search: { redirect: window.location.toString() },
+	})
 }
 
 const getCachedUser = () =>
