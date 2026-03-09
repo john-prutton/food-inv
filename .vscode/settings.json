@@ -1,6 +1,7 @@
 {
 	"prettier.configPath": "prettier.config.mjs",
 	"files.exclude": {
+		".vscode": true,
 		"**/node_modules/": true,
 		"**/.turbo/": true,
 		"**/.tanstack/": true,
