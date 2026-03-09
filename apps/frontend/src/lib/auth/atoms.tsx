@@ -1,8 +1,11 @@
+import { Schema } from "effect"
 import * as Effect from "effect/Effect"
 import * as AsyncResult from "effect/unstable/reactivity/AsyncResult"
 import * as Atom from "effect/unstable/reactivity/Atom"
 
 import type { OAuthProvider } from "@repo/domain/schema/auth/index.js"
+import { UserSchema } from "@repo/domain/schema/user/index.js"
+import type { User } from "@repo/domain/schema/user/index.js"
 
 import { ApiClient } from "../api-client"
 
@@ -13,6 +16,32 @@ export const login = (provider: OAuthProvider) => {
 		redirectUrl,
 	)}`
 }
+
+const getCachedUser = () =>
+	Schema.decodeUnknownEffect(UserSchema)(
+		JSON.parse(localStorage.getItem("cached-user") ?? "{}"),
+	).pipe(
+		Effect.catchTag("SchemaError", () => Effect.succeed(null)),
+		Effect.runSync,
+	)
+
+const setCachedUSer = (user: User | null) =>
+	Effect.gen(function* () {
+		if (!user) {
+			localStorage.removeItem("cached-user")
+		} else {
+			const userJson = yield* Schema.encodeEffect(UserSchema)(user).pipe(
+				Effect.map((u) => JSON.stringify(u)),
+			)
+
+			localStorage.setItem("cached-user", userJson)
+		}
+	}).pipe(
+		Effect.catchTag("SchemaError", () =>
+			Effect.succeed(localStorage.removeItem("cached-user")),
+		),
+		Effect.runSync,
+	)
 
 export const userAtom = Atom.make(
 	Effect.gen(function* () {
@@ -38,7 +67,7 @@ export const authAtom = Atom.make((get) => {
 	if (AsyncResult.isWaiting(userAsyncResult))
 		return {
 			state: "loading",
-			user: null,
+			user: getCachedUser(),
 			login,
 		} as const
 
@@ -50,6 +79,7 @@ export const authAtom = Atom.make((get) => {
 		} as const
 
 	const user = AsyncResult.getOrThrow(userAsyncResult)
+	setCachedUSer(user)
 
 	if (user === null)
 		return {
