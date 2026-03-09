@@ -11,15 +11,9 @@ function App() {
 	const auth = useAtomValue(authAtom)
 
 	let content: React.ReactNode
-	if (auth.state === "loading") content = "Checking auth state..."
 
-	if (auth.state === "unauthenticated")
-		content = (
-			<Button onClick={() => auth.login("google")}>Login with Google</Button>
-		)
-
-	if (auth.state === "authenticated") {
-		const user = auth.user
+	if (auth.state === "authenticated" || !!auth.user) {
+		const user = auth.user!
 
 		content = (
 			<>
@@ -27,7 +21,11 @@ function App() {
 				<p>{user.name}</p>
 			</>
 		)
-	}
+	} else if (auth.state === "loading") content = "Checking auth state..."
+	else
+		content = (
+			<Button onClick={() => auth.login("google")}>Login with Google</Button>
+		)
 
 	return (
 		<main className="h-screen grid place-content-center">

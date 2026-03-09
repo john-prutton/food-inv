@@ -13,6 +13,9 @@ export class AuthApiGroup extends HttpApiGroup.make("auth")
 			params: {
 				provider: OAuthProviderSchema,
 			},
+			query: {
+				redirect: Schema.String.pipe(Schema.optional),
+			},
 			error: AuthError,
 		}),
 	)

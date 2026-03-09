@@ -36,7 +36,7 @@ const HealthApiGroupLive = HttpApiBuilder.group(Api, "Health", (handler) =>
 
 const AuthApiGroupLive = HttpApiBuilder.group(Api, "auth", (handler) =>
 	handler
-		.handle("login", ({ params }) =>
+		.handle("login", ({ params, query }) =>
 			Effect.gen(function* () {
 				const isProduction = yield* Config.string("NODE_ENV")
 					.asEffect()
@@ -49,6 +49,13 @@ const AuthApiGroupLive = HttpApiBuilder.group(Api, "auth", (handler) =>
 
 				const { cookies, url } =
 					yield* auth.oauth.generateCookiesAndAuthorizationUrl(provider)
+
+				const authCookies = cookies
+				if (query.redirect)
+					authCookies.push({
+						name: "redirect",
+						value: query.redirect,
+					})
 
 				yield* HttpEffect.appendPreResponseHandler((_req, response) =>
 					HttpServerResponse.setCookies(
@@ -104,6 +111,10 @@ const AuthApiGroupLive = HttpApiBuilder.group(Api, "auth", (handler) =>
 				const { token, session } = yield* auth.createSession(user.id)
 				yield* db.auth.createSession(session)
 
+				const redirect =
+					request.cookies[`${provider}_oauth_redirect`] ||
+					"http://localhost:3000/app"
+
 				yield* HttpEffect.appendPreResponseHandler((request, response) =>
 					Effect.gen(function* () {
 						let resp = response
@@ -150,7 +161,7 @@ const AuthApiGroupLive = HttpApiBuilder.group(Api, "auth", (handler) =>
 					),
 				)
 
-				return HttpServerResponse.redirect("http://localhost:3000", {
+				return HttpServerResponse.redirect(redirect, {
 					status: 302,
 				})
 			}),
