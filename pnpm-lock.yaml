@@ -130,6 +130,9 @@ importers:
       '@repo/eslint':
         specifier: workspace:^
         version: link:../../tooling/eslint
+      '@repo/typescript':
+        specifier: workspace:^
+        version: link:../../tooling/typescript
       '@tanstack/devtools-vite':
         specifier: ^0.3.11
         version: 0.3.12(vite@7.3.1(@types/node@24.10.13)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0)(yaml@2.8.2))

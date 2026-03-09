@@ -29,6 +29,7 @@
 	},
 	"devDependencies": {
 		"@repo/eslint": "workspace:^",
+		"@repo/typescript": "workspace:^",
 		"@tanstack/devtools-vite": "^0.3.11",
 		"@tanstack/eslint-config": "^0.3.0",
 		"@tanstack/router-plugin": "^1.132.0",
