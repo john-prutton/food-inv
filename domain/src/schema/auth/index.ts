@@ -16,7 +16,7 @@ export const SessionSchema = Schema.Struct({
 })
 
 export type OAuthProvider = typeof OAuthProviderSchema.Type
-export const OAuthProviderSchema = Schema.Literals(["google"])
+export const OAuthProviderSchema = Schema.Literals(["google", "github"])
 
 export type OAuthUser = typeof OAuthUserSchema.Type
 export const OAuthUserSchema = Schema.Struct({

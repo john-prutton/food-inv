@@ -3,6 +3,7 @@ import * as Layer from "effect/Layer"
 
 import type { OAuthProvider as OAuthProviderName } from "@repo/domain/schema/auth"
 
+import { GithubOAuthProvider } from "./github.js"
 import { GoogleOAuthProvider } from "./google.js"
 import { OAuthError, OAuthProvider, OAuthProviders } from "./index.js"
 
@@ -16,6 +17,10 @@ export const OAuthProvidersLive = Layer.effect(
 		oauthProviders.set(
 			"google",
 			yield* OAuthProvider.asEffect().pipe(Effect.provide(GoogleOAuthProvider)),
+		)
+		oauthProviders.set(
+			"github",
+			yield* OAuthProvider.asEffect().pipe(Effect.provide(GithubOAuthProvider)),
 		)
 
 		return {

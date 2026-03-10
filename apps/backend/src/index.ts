@@ -1,5 +1,6 @@
 import * as Layer from "effect/Layer"
 import * as HttpRouter from "effect/unstable/http/HttpRouter"
+import * as NodeHttpClient from "@effect/platform-node/NodeHttpClient"
 import * as NodeHttpPlatform from "@effect/platform-node/NodeHttpPlatform"
 import * as NodeHttpServer from "@effect/platform-node/NodeHttpServer"
 import * as NodeRuntime from "@effect/platform-node/NodeRuntime"
@@ -23,6 +24,7 @@ const RouterLive = HttpRouter.serve(AllRouters).pipe(
 	Layer.provide(DatabaseLive),
 	Layer.provide(HttpServer),
 	Layer.provide(NodeHttpPlatform.layer),
+	Layer.provide(NodeHttpClient.layerUndici),
 	Layer.orDie,
 	Layer.launch,
 )

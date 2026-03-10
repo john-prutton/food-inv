@@ -22,10 +22,7 @@ function App() {
 			</>
 		)
 	} else if (auth.state === "loading") content = "Checking auth state..."
-	else
-		content = (
-			<Button onClick={() => auth.login("google")}>Login with Google</Button>
-		)
+	else content = <Button onClick={() => auth.login()}>Go to login page</Button>
 
 	return (
 		<main className="h-screen grid place-content-center">
