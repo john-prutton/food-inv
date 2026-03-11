@@ -29,6 +29,6 @@
 		"@oslojs/encoding": "^1.1.0",
 		"@repo/domain": "workspace:^",
 		"arctic": "^3.7.0",
-		"effect": "4.0.0-beta.10"
+		"effect": "4.0.0-beta.30"
 	}
 }
