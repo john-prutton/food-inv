@@ -190,7 +190,6 @@ export const GithubOAuthProvider = Layer.effect(
 					),
 				)
 
-				yield* Effect.log(user)
 				return user
 			}),
 		}
