@@ -4,7 +4,7 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
 
 import "../styles.css"
 
-import { AuthProvider } from "@/lib/auth"
+import { Providers } from "@/lib/providers"
 
 export const Route = createRootRoute({
 	component: RootComponent,
@@ -13,9 +13,9 @@ export const Route = createRootRoute({
 function RootComponent() {
 	return (
 		<>
-			<AuthProvider>
+			<Providers>
 				<Outlet />
-			</AuthProvider>
+			</Providers>
 			<TanStackDevtools
 				config={{
 					position: "bottom-right",
