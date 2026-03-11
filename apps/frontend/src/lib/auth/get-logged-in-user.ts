@@ -17,6 +17,5 @@ export const CheckAuthOrRedirect = Effect.fn(
 			}),
 		),
 	),
-	// Effect.map(() => Effect.void),
 	Effect.runPromise,
 )
