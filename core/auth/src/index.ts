@@ -1,6 +1,7 @@
 import * as Config from "effect/Config"
 import * as Effect from "effect/Effect"
 import * as Layer from "effect/Layer"
+import * as Redacted from "effect/Redacted"
 import * as HttpServerRequest from "effect/unstable/http/HttpServerRequest"
 import * as HttpServerResponse from "effect/unstable/http/HttpServerResponse"
 
@@ -175,15 +176,23 @@ export const AuthLive = Layer.effect(
 export const AuthMiddlewareLive = Layer.effect(
 	AuthMiddleware,
 	Effect.gen(function* () {
+		const auth = yield* Auth
+
 		return {
 			session: (effect, opts) =>
 				Effect.provideServiceEffect(
 					effect,
 					CurrentUser,
 					Effect.gen(function* () {
-						return yield* Effect.fail(
-							new AuthError({ message: "not implemented" }),
-						)
+						const { user } = yield* auth
+							.validateSession(Redacted.value(opts.credential))
+							.pipe(
+								Effect.catchTag("UnauthenticatedError", (e) =>
+									Effect.fail(new AuthError({ message: e.message })),
+								),
+							)
+
+						return user
 					}),
 				),
 		}

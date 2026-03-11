@@ -11,7 +11,7 @@ import { HealthApiError } from "@repo/domain/schema/health/index.js"
 import {
 	Auth,
 	AuthError,
-	UnauthenticatedError,
+	CurrentUser,
 } from "@repo/domain/services/auth/index.js"
 import { Database } from "@repo/domain/services/database/index.js"
 
@@ -167,61 +167,10 @@ const AuthApiGroupLive = HttpApiBuilder.group(Api, "auth", (handler) =>
 			}),
 		)
 
-		.handle("me", ({ request }) =>
-			Effect.gen(function* () {
-				const isProduction =
-					(yield* Config.string("NODE_ENV")
-						.asEffect()
-						.pipe(
-							Effect.catchTag("ConfigError", () =>
-								Effect.succeed("development"),
-							),
-						)) === "production"
-
-				const sessionToken = request.cookies["session"]
-				if (!sessionToken) return yield* new UnauthenticatedError()
-
-				const auth = yield* Auth
-				const userSession = yield* auth
-					.validateSession(sessionToken)
-					.pipe(
-						Effect.catchTag("AuthError", (e) =>
-							Effect.logError(e).pipe(
-								Effect.andThen(Effect.fail(new UnauthenticatedError())),
-							),
-						),
-					)
-
-				yield* HttpEffect.appendPreResponseHandler((_, response) =>
-					Effect.gen(function* () {
-						return yield* HttpServerResponse.setCookie(
-							response,
-							"session",
-							sessionToken,
-							{
-								httpOnly: true,
-								path: "/",
-								secure: isProduction,
-								sameSite: "lax",
-								expires: userSession.session.expirationDate,
-							},
-						)
-					}).pipe(
-						Effect.catchTag("CookieError", () =>
-							Effect.fail(
-								new HttpServerError.HttpServerError({
-									reason: new HttpServerError.ResponseError({
-										request,
-										response,
-										description: "Failed to set/remove cookies on response",
-									}),
-								}),
-							),
-						),
-					),
-				)
-
-				return userSession.user
+		.handle(
+			"me",
+			Effect.fn(function* () {
+				return yield* CurrentUser
 			}),
 		),
 )

@@ -4,7 +4,11 @@ import * as HttpApiGroup from "effect/unstable/httpapi/HttpApiGroup"
 
 import { OAuthProviderSchema } from "@/schema/auth/index.js"
 import { UserSchema } from "@/schema/user/index.js"
-import { AuthError, UnauthenticatedError } from "@/services/auth/index.js"
+import {
+	AuthError,
+	AuthMiddleware,
+	UnauthenticatedError,
+} from "@/services/auth/index.js"
 import { DatabaseError } from "@/services/database/index.js"
 
 export class AuthApiGroup extends HttpApiGroup.make("auth")
@@ -34,7 +38,7 @@ export class AuthApiGroup extends HttpApiGroup.make("auth")
 		HttpApiEndpoint.get("me", "/me", {
 			success: UserSchema,
 			error: UnauthenticatedError,
-		}),
+		}).middleware(AuthMiddleware),
 	)
 
 	.prefix("/auth") {}

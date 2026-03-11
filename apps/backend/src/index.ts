@@ -7,7 +7,7 @@ import * as NodeRuntime from "@effect/platform-node/NodeRuntime"
 
 import { createServer } from "node:http"
 
-import { AuthLive } from "@repo/auth/index.js"
+import { AuthLive, AuthMiddlewareLive } from "@repo/auth/index.js"
 import { DatabaseLive } from "@repo/database"
 
 import { ApiRouter } from "./api/index.js"
@@ -20,6 +20,7 @@ const HttpServer = NodeHttpServer.layer(createServer, {
 })
 
 const RouterLive = HttpRouter.serve(AllRouters).pipe(
+	Layer.provide(AuthMiddlewareLive),
 	Layer.provide(AuthLive),
 	Layer.provide(DatabaseLive),
 	Layer.provide(HttpServer),
