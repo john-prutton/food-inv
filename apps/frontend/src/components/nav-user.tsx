@@ -1,5 +1,7 @@
 import { useAtomValue } from "@effect/atom-react"
 
+import type { Api } from "@repo/domain/api/index.js"
+
 import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui/components/avatar"
 import {
 	DropdownMenu,
@@ -25,6 +27,12 @@ import {
 import { Skeleton } from "@repo/ui/components/skeleton"
 
 import { authAtom } from "@/lib/auth/atoms"
+
+const logoutUrl =
+	process.env.FOOD_INV_API_URL! +
+	("/api/auth/logout" satisfies (typeof Api)["groups"][string]["endpoints"][string]["path"])
+
+alert(logoutUrl)
 
 export function NavUser() {
 	const auth = useAtomValue(authAtom)
@@ -103,9 +111,11 @@ export function NavUser() {
 						</DropdownMenuItem>
 					</DropdownMenuGroup>
 					<DropdownMenuSeparator />
-					<DropdownMenuItem>
-						<LogOutIcon />
-						Log out
+					<DropdownMenuItem asChild>
+						<a href={logoutUrl}>
+							<LogOutIcon />
+							Log out
+						</a>
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
