@@ -46,6 +46,16 @@ export const AuthLive = Layer.effect(
 				return encodeHexLowerCase(sha256(new TextEncoder().encode(token)))
 			})
 
+		const setSessionCookie = Effect.fn(function* (token: string) {
+			HttpServerResponse.setCookie("session", token, {
+				httpOnly: true,
+				secure: isProduction,
+				sameSite: "lax",
+				path: "/",
+				maxAge: `${SESSION_DURATION} millis`,
+			})
+		})
+
 		return {
 			createSession: Effect.fn(function* (userId) {
 				const token = yield* generateSessionToken
@@ -80,7 +90,10 @@ export const AuthLive = Layer.effect(
 								userSession.session.id,
 								new Date(Date.now() + SESSION_DURATION),
 							)
-							.pipe(Effect.catchTag("DatabaseError", Effect.logError))
+							.pipe(
+								Effect.andThen(setSessionCookie(token)),
+								Effect.catchTag("DatabaseError", Effect.logError),
+							)
 
 						return {
 							...userSession,
@@ -113,20 +126,14 @@ export const AuthLive = Layer.effect(
 			getSessionCookie: Effect.fn(function* (request) {
 				const sessionToken = request.cookies["session"]
 				if (!sessionToken)
-					yield* new AuthError({ message: "no session token on the cookie" })
+					return yield* new AuthError({
+						message: "no session token on the cookie",
+					})
 
 				return yield* new AuthError({ message: "not implemented" })
 			}),
 
-			setSessionCookie: Effect.fn(function* (token) {
-				HttpServerResponse.setCookie("session", token, {
-					httpOnly: true,
-					secure: isProduction,
-					sameSite: "lax",
-					path: "/",
-					maxAge: 60 * 60 * 24 * 30,
-				})
-			}),
+			setSessionCookie,
 
 			oauth: {
 				generateCookiesAndAuthorizationUrl: Effect.fn(function* (providerName) {
