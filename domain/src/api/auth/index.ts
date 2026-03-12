@@ -41,4 +41,6 @@ export class AuthApiGroup extends HttpApiGroup.make("auth")
 		}).middleware(AuthMiddleware),
 	)
 
+	.add(HttpApiEndpoint.get("logout", "/logout", { error: AuthError }))
+
 	.prefix("/auth") {}

@@ -181,6 +181,66 @@ const AuthApiGroupLive = HttpApiBuilder.group(Api, "auth", (handler) =>
 			Effect.fn(function* () {
 				return yield* CurrentUser
 			}),
+		)
+
+		.handle("logout", ({ request }) =>
+			Effect.gen(function* () {
+				const sessionToken = request.cookies["session"]
+
+				if (sessionToken) {
+					const auth = yield* Auth
+					yield* auth.invalidateSession(sessionToken)
+				}
+
+				const redirectUrl = yield* Config.string("FOOD_INV_FRONTEND_URL")
+					.asEffect()
+					.pipe(
+						Effect.catchTag("ConfigError", (e) =>
+							Effect.fail(
+								new AuthError({
+									message: `Failed to get env var: ${e.message}`,
+								}),
+							),
+						),
+					)
+
+				const isProduction =
+					(yield* Config.string("NODE_ENV")
+						.asEffect()
+						.pipe(
+							Effect.catchTag("ConfigError", (e) =>
+								Effect.fail(
+									new AuthError({
+										message: `Failed to get env var: ${e.message}`,
+									}),
+								),
+							),
+						)) === "production"
+
+				yield* HttpEffect.appendPreResponseHandler((request, response) =>
+					HttpServerResponse.setCookie(response, "session", "", {
+						httpOnly: true,
+						path: "/",
+						secure: isProduction,
+						sameSite: "lax",
+						maxAge: 0,
+					}).pipe(
+						Effect.catchTag("CookieError", () =>
+							Effect.fail(
+								new HttpServerError.HttpServerError({
+									reason: new HttpServerError.ResponseError({
+										request,
+										response,
+										description: "Failed to set/remove cookies on response",
+									}),
+								}),
+							),
+						),
+					),
+				)
+
+				return HttpServerResponse.redirect(redirectUrl, { status: 302 })
+			}),
 		),
 )
 
