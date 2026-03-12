@@ -110,11 +110,29 @@ export const AuthLive = Layer.effect(
 				),
 
 			invalidateSession: Effect.fn(function* (token) {
-				return yield* new AuthError({ message: "not implemented" })
+				const sessionId = yield* hashSessionToken(token)
+
+				yield* db.auth.deleteSession(sessionId).pipe(
+					Effect.catchTag("DatabaseError", (e) =>
+						Effect.fail(
+							new AuthError({
+								message: `Failed to delete session ${token}: ${e.message}`,
+							}),
+						),
+					),
+				)
 			}),
 
 			invalidateUserSessions: Effect.fn(function* (userId) {
-				return yield* new AuthError({ message: "not implemented" })
+				yield* db.auth.deleteSessionsForUser(userId).pipe(
+					Effect.catchTag("DatabaseError", (e) =>
+						Effect.fail(
+							new AuthError({
+								message: `Failed to delete sessions for user ${userId}: ${e.message}`,
+							}),
+						),
+					),
+				)
 			}),
 
 			setSessionCookie,
@@ -178,8 +196,8 @@ export const AuthMiddlewareLive = Layer.effect(
 						const { user } = yield* auth
 							.validateSession(Redacted.value(opts.credential))
 							.pipe(
-								Effect.catchTag("UnauthenticatedError", (e) =>
-									Effect.fail(new AuthError({ message: e.message })),
+								Effect.catchTag("UnauthenticatedError", () =>
+									Effect.fail(new AuthError({ message: "Unauthenticated" })),
 								),
 							)
 
