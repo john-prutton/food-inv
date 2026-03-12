@@ -84,7 +84,7 @@ export const GithubOAuthProvider = Layer.effect(
 		const githubCallbackUrl =
 			(yield* Config.string("FOOD_INV_API_URL")) +
 			(
-				"/api/auth/callback/:provider" as (typeof Api)["groups"][string]["endpoints"][string]["path"]
+				"/api/auth/callback/:provider" satisfies (typeof Api)["groups"][string]["endpoints"][string]["path"]
 			).replace(":provider", "github")
 
 		const githubProvider = new GitHub(
