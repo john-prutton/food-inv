@@ -8,4 +8,5 @@ await build({
 	target: ["node24"],
 	bundle: true,
 	// minify: true
+	sourcemap: true,
 })

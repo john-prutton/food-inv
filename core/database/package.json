@@ -25,10 +25,10 @@
 		"drizzle-kit": "^0.31.9"
 	},
 	"dependencies": {
-		"@effect/sql-pg": "4.0.0-beta.10",
+		"@effect/sql-pg": "4.0.0-beta.30",
 		"@repo/domain": "workspace:^",
 		"drizzle-orm": "^0.45.1",
-		"effect": "4.0.0-beta.10",
+		"effect": "4.0.0-beta.30",
 		"pg": "^8.19.0"
 	}
 }
