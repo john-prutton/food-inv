@@ -80,6 +80,16 @@ export const DatabaseLive = Layer.effect(
 							.returning()
 							.then(([session]) => session!),
 					),
+
+				deleteSession: (sessionId) =>
+					TryQuery(
+						db.delete(sessionsTable).where(eq(sessionsTable.id, sessionId)),
+					),
+
+				deleteSessionsForUser: (userId) =>
+					TryQuery(
+						db.delete(sessionsTable).where(eq(sessionsTable.userId, userId)),
+					),
 			},
 		}
 	}),

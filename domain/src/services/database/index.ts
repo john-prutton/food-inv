@@ -27,18 +27,27 @@ export class Database extends ServiceMap.Service<
 
 		readonly auth: {
 			readonly createSession: (session: Session) => DatabaseQuery<void>
+
 			readonly recordUserOAuthProvider: (
 				userId: User["id"],
 				oauthProviderUserId: string,
 				oauthProvider: OAuthProvider,
 			) => DatabaseQuery<void>
+
 			readonly getUserSessionByToken: (
 				token: Session["id"],
 			) => DatabaseQuery<{ session: Session; user: User } | null>
+
 			readonly refreshSession: (
 				sessionId: Session["id"],
 				expiration: Session["expirationDate"],
 			) => DatabaseQuery<Session>
+
+			readonly deleteSession: (sessionId: Session["id"]) => DatabaseQuery<void>
+
+			readonly deleteSessionsForUser: (
+				userId: User["id"],
+			) => DatabaseQuery<void>
 		}
 	}
 >()("Database") {}

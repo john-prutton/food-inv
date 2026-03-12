@@ -11,7 +11,14 @@ export const DatabaseFake = Layer.succeed(
 			createSession: () => Effect.void,
 			recordUserOAuthProvider: () => Effect.void,
 			getUserSessionByToken: () => Effect.succeed(null),
-			refreshSession: () => Effect.void,
+			refreshSession: () =>
+				Effect.succeed({
+					expirationDate: new Date(),
+					id: "session-id",
+					userId: "user-id",
+				}),
+			deleteSession: () => Effect.void,
+			deleteSessionsForUser: () => Effect.void,
 		},
 		user: {
 			createUser: () => Effect.succeed("user-id"),
