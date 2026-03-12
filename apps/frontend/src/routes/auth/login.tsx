@@ -19,7 +19,7 @@ const authRoutes = OAuthProviderSchema.literals.map(
 	(provider) =>
 		[
 			provider,
-			import.meta.env.FOOD_INV_API_URL +
+			process.env.FOOD_INV_API_URL! +
 				baseAuthRoute.replace(":provider", provider),
 		] as const,
 )
