@@ -85,22 +85,16 @@ export const AuthLive = Layer.effect(
 						userSession.session.expirationDate.getTime() <
 						Date.now() + SESSION_DURATION / 2
 					) {
-						yield* db.auth
-							.refreshSession(
-								userSession.session.id,
-								new Date(Date.now() + SESSION_DURATION),
-							)
-							.pipe(
-								Effect.andThen(setSessionCookie(token)),
-								Effect.catchTag("DatabaseError", Effect.logError),
-							)
+						const session = yield* db.auth.refreshSession(
+							userSession.session.id,
+							new Date(Date.now() + SESSION_DURATION),
+						)
+
+						yield* setSessionCookie(token)
 
 						return {
-							...userSession,
-							session: {
-								...userSession.session,
-								expirationDate: new Date(Date.now() + SESSION_DURATION),
-							},
+							user: userSession.user,
+							session,
 						}
 					}
 

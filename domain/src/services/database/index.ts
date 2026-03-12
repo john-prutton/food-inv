@@ -38,7 +38,7 @@ export class Database extends ServiceMap.Service<
 			readonly refreshSession: (
 				sessionId: Session["id"],
 				expiration: Session["expirationDate"],
-			) => DatabaseQuery<void>
+			) => DatabaseQuery<Session>
 		}
 	}
 >()("Database") {}

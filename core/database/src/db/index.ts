@@ -76,7 +76,9 @@ export const DatabaseLive = Layer.effect(
 						db
 							.update(sessionsTable)
 							.set({ expirationDate: expiration })
-							.where(eq(sessionsTable.id, sessionId)),
+							.where(eq(sessionsTable.id, sessionId))
+							.returning()
+							.then(([session]) => session!),
 					),
 			},
 		}
