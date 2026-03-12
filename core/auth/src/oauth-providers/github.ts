@@ -11,6 +11,7 @@ import * as HttpServerRequest from "effect/unstable/http/HttpServerRequest"
 
 import { generateState, GitHub } from "arctic"
 
+import type { Api } from "@repo/domain/api/index.js"
 import { UserSchema } from "@repo/domain/schema/user/index.js"
 
 import { OAuthError, OAuthProvider } from "./index.js"
@@ -80,11 +81,16 @@ export const GithubOAuthProvider = Layer.effect(
 		const githubClientSecret = yield* Config.string(
 			"FOOD_INV_GITHUB_CLIENT_SECRET",
 		)
+		const githubCallbackUrl =
+			(yield* Config.string("FOOD_INV_API_URL")) +
+			(
+				"/api/auth/callback/:provider" as (typeof Api)["groups"][string]["endpoints"][string]["path"]
+			).replace(":provider", "github")
 
 		const githubProvider = new GitHub(
 			githubClientId,
 			githubClientSecret,
-			"http://localhost:3001/api/auth/callback/github",
+			githubCallbackUrl,
 		)
 
 		const httpClient = yield* HttpClient.HttpClient

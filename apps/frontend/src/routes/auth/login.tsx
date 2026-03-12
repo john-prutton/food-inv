@@ -14,12 +14,12 @@ const LoginParamsSchema = Schema.Struct({
 const LoginParamsValidator = Schema.decodeUnknownSync(LoginParamsSchema)
 
 const baseAuthRoute: (typeof Api)["groups"][string]["endpoints"][string]["path"] =
-	"/auth/login/:provider"
+	"/api/auth/login/:provider"
 const authRoutes = OAuthProviderSchema.literals.map(
 	(provider) =>
 		[
 			provider,
-			"http://localhost:3001/api" +
+			import.meta.env.FOOD_INV_API_URL +
 				baseAuthRoute.replace(":provider", provider),
 		] as const,
 )

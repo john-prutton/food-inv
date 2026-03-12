@@ -14,6 +14,7 @@ import {
 	Google,
 } from "arctic"
 
+import type { Api } from "@repo/domain/api/index.js"
 import { UserSchema } from "@repo/domain/schema/user/index.js"
 
 import { OAuthError, OAuthProvider } from "./index.js"
@@ -52,11 +53,16 @@ export const GoogleOAuthProvider = Layer.effect(
 		const googleClientSecret = yield* Config.string(
 			"FOOD_INV_GOOGLE_CLIENT_SECRET",
 		)
+		const googleCallbackUrl =
+			(yield* Config.string("FOOD_INV_API_URL")) +
+			(
+				"/api/auth/callback/:provider" as (typeof Api)["groups"][string]["endpoints"][string]["path"]
+			).replace(":provider", "google")
 
 		const googleProvider = new Google(
 			googleClientId,
 			googleClientSecret,
-			"http://localhost:3001/api/auth/callback/google",
+			googleCallbackUrl,
 		)
 
 		return {

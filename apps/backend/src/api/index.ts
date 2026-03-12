@@ -113,8 +113,17 @@ const AuthApiGroupLive = HttpApiBuilder.group(Api, "auth", (handler) =>
 
 				const redirect =
 					request.cookies[`${provider}_oauth_redirect`] ||
-					"http://localhost:3000/app"
-
+					(yield* Config.string("FOOD_INV_FRONTEND_URL")
+						.asEffect()
+						.pipe(
+							Effect.catchTag("ConfigError", () =>
+								Effect.fail(
+									new AuthError({
+										message: "Failed to get FOOD_INV_FRONTEND_URL",
+									}),
+								),
+							),
+						)) + "/app"
 				yield* HttpEffect.appendPreResponseHandler((request, response) =>
 					Effect.gen(function* () {
 						let resp = response

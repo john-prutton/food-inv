@@ -9,7 +9,7 @@ import tsconfigPaths from "vite-tsconfig-paths"
 const config = defineConfig({
 	server: {
 		proxy: {
-			"/api": "http://localhost:3001/",
+			"/api": process.env.FOOD_INV_API_URL!,
 		},
 	},
 	plugins: [
