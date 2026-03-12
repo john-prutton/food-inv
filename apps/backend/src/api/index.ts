@@ -22,7 +22,7 @@ const HealthApiGroupLive = HttpApiBuilder.group(Api, "Health", (handler) =>
 			const healthy = yield* db
 				.healthCheck()
 				.pipe(
-					Effect.catchTag("DatabaseError", (e) =>
+					Effect.catchTag("DatabaseError", () =>
 						Effect.fail(new HealthApiError()),
 					),
 				)

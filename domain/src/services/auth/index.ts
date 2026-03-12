@@ -5,12 +5,7 @@ import * as HttpServerRequest from "effect/unstable/http/HttpServerRequest"
 import * as HttpApiMiddleware from "effect/unstable/httpapi/HttpApiMiddleware"
 import * as HttpApiSecurity from "effect/unstable/httpapi/HttpApiSecurity"
 
-import type {
-	AuthToken,
-	HashedAuthToken,
-	OAuthProvider,
-	Session,
-} from "@/schema/auth/index.js"
+import type { AuthToken, OAuthProvider, Session } from "@/schema/auth/index.js"
 import type { User } from "@/schema/user/index.js"
 
 export class AuthError extends Schema.TaggedErrorClass<AuthError>()(
