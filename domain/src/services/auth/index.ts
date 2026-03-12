@@ -56,9 +56,6 @@ export class Auth extends ServiceMap.Service<
 		) => Effect.Effect<void, AuthError>
 
 		readonly setSessionCookie: (token: AuthToken) => Effect.Effect<void>
-		readonly getSessionCookie: (
-			request: HttpServerRequest.HttpServerRequest,
-		) => Effect.Effect<HashedAuthToken, AuthError>
 
 		oauth: {
 			readonly generateCookiesAndAuthorizationUrl: (

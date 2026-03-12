@@ -117,16 +117,6 @@ export const AuthLive = Layer.effect(
 				return yield* new AuthError({ message: "not implemented" })
 			}),
 
-			getSessionCookie: Effect.fn(function* (request) {
-				const sessionToken = request.cookies["session"]
-				if (!sessionToken)
-					return yield* new AuthError({
-						message: "no session token on the cookie",
-					})
-
-				return yield* new AuthError({ message: "not implemented" })
-			}),
-
 			setSessionCookie,
 
 			oauth: {
