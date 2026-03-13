@@ -25,7 +25,7 @@ const getCachedUser = () =>
 		Effect.runSync,
 	)
 
-const setCachedUSer = (user: User | null) =>
+const setCachedUser = (user: User | null) =>
 	Effect.gen(function* () {
 		if (!user) {
 			localStorage.removeItem("cached-user")
@@ -79,7 +79,7 @@ export const authAtom = Atom.make((get) => {
 		} as const
 
 	const user = AsyncResult.getOrThrow(userAsyncResult)
-	setCachedUSer(user)
+	setCachedUser(user)
 
 	if (user === null)
 		return {

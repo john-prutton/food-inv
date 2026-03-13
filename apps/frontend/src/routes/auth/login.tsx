@@ -7,6 +7,8 @@ import { OAuthProviderSchema } from "@repo/domain/schema/auth/index.js"
 
 import { Button } from "@repo/ui/components/button"
 
+import { apiBaseUrl } from "@/lib/config"
+
 const LoginParamsSchema = Schema.Struct({
 	redirect: Schema.String.pipe(Schema.optional),
 })
@@ -19,8 +21,7 @@ const authRoutes = OAuthProviderSchema.literals.map(
 	(provider) =>
 		[
 			provider,
-			process.env.OPENTAB_API_URL! +
-				baseAuthRoute.replace(":provider", provider),
+			apiBaseUrl + baseAuthRoute.replace(":provider", provider),
 		] as const,
 )
 

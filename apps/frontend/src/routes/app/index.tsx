@@ -4,9 +4,10 @@ import { createFileRoute } from "@tanstack/react-router"
 import type { Api } from "@repo/domain/api/index.js"
 
 import { authAtom } from "@/lib/auth/atoms"
+import { apiBaseUrl } from "@/lib/config"
 
 const logoutUrl =
-	process.env.OPENTAB_API_URL! +
+	apiBaseUrl +
 	("/api/auth/logout" satisfies (typeof Api)["groups"][string]["endpoints"][string]["path"])
 
 export const Route = createFileRoute("/app/")({

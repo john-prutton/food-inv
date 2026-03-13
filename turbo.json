@@ -1,7 +1,7 @@
 {
 	"$schema": "https://turbo.build/schema.json",
 	"ui": "tui",
-	"globalEnv": ["FOOD_INV_*", "NODE_ENV"],
+	"globalEnv": ["OPENTAB_*", "NODE_ENV"],
 	"tasks": {
 		"dev": {
 			"persistent": true,
