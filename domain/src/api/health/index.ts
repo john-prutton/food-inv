@@ -1,7 +1,7 @@
 import * as HttpApiEndpoint from "effect/unstable/httpapi/HttpApiEndpoint"
 import * as HttpApiGroup from "effect/unstable/httpapi/HttpApiGroup"
 
-import { HealthApiError, HealthSchema } from "@/schema/index.js"
+import { HealthApiError, HealthSchema } from "@/schema/health/index.js"
 
 export class HealthApiGroup extends HttpApiGroup.make("Health")
 	.add(

@@ -2,7 +2,7 @@
 	"name": "@repo/backend",
 	"type": "module",
 	"scripts": {
-		"dev": "nodemon --watch src --ext ts --exec pnpm dep-watcher bash -c \"clear && pnpm clean && pnpm build && pnpm copy-deps && cd dist && node server.cjs\"",
+		"dev": "nodemon --watch src --ext ts --exec pnpm dep-watcher bash -c \"clear && pnpm clean && pnpm build && pnpm copy-deps && cd dist && node --enable-source-maps server.cjs\"",
 		"build": "tsc && node esbuild.config.js",
 		"test": "vitest run || true",
 		"clean": "rm -rf dist/*",
@@ -17,9 +17,10 @@
 		"esbuild": "^0.27.3"
 	},
 	"dependencies": {
-		"@effect/platform-node": "4.0.0-beta.10",
+		"@effect/platform-node": "4.0.0-beta.30",
+		"@repo/auth": "workspace:^",
 		"@repo/database": "workspace:^",
 		"@repo/domain": "workspace:^",
-		"effect": "4.0.0-beta.10"
+		"effect": "4.0.0-beta.30"
 	}
 }

@@ -1,12 +1,11 @@
 {
 	"$schema": "https://turbo.build/schema.json",
 	"ui": "tui",
-	"globalEnv": ["FOOD_INV_*"],
+	"globalEnv": ["OPENTAB_*", "NODE_ENV"],
 	"tasks": {
 		"dev": {
 			"persistent": true,
-			"cache": false,
-			"passThroughEnv": ["FOOD_INV_*"]
+			"cache": false
 		},
 		"build": {
 			"dependsOn": ["^build"],
