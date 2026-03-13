@@ -9,12 +9,12 @@ import tsconfigPaths from "vite-tsconfig-paths"
 const config = defineConfig({
 	define: {
 		"process.env": {
-			FOOD_INV_API_URL: process.env.FOOD_INV_API_URL!,
+			OPENTAB_API_URL: process.env.OPENTAB_API_URL!,
 		},
 	},
 	server: {
 		proxy: {
-			"/api": process.env.FOOD_INV_API_URL!,
+			"/api": process.env.OPENTAB_API_URL!,
 		},
 	},
 	plugins: [

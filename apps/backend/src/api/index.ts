@@ -113,13 +113,13 @@ const AuthApiGroupLive = HttpApiBuilder.group(Api, "auth", (handler) =>
 
 				const redirect =
 					request.cookies[`${provider}_oauth_redirect`] ||
-					(yield* Config.string("FOOD_INV_FRONTEND_URL")
+					(yield* Config.string("OPENTAB_FRONTEND_URL")
 						.asEffect()
 						.pipe(
 							Effect.catchTag("ConfigError", () =>
 								Effect.fail(
 									new AuthError({
-										message: "Failed to get FOOD_INV_FRONTEND_URL",
+										message: "Failed to get OPENTAB_FRONTEND_URL",
 									}),
 								),
 							),
@@ -192,7 +192,7 @@ const AuthApiGroupLive = HttpApiBuilder.group(Api, "auth", (handler) =>
 					yield* auth.invalidateSession(sessionToken)
 				}
 
-				const redirectUrl = yield* Config.string("FOOD_INV_FRONTEND_URL")
+				const redirectUrl = yield* Config.string("OPENTAB_FRONTEND_URL")
 					.asEffect()
 					.pipe(
 						Effect.catchTag("ConfigError", (e) =>

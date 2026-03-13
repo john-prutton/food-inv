@@ -49,12 +49,12 @@ const DecodeClaimsToUser = Schema.decodeUnknownEffect(GoogleClaimsToUser)
 export const GoogleOAuthProvider = Layer.effect(
 	OAuthProvider,
 	Effect.gen(function* () {
-		const googleClientId = yield* Config.string("FOOD_INV_GOOGLE_CLIENT_ID")
+		const googleClientId = yield* Config.string("OPENTAB_GOOGLE_CLIENT_ID")
 		const googleClientSecret = yield* Config.string(
-			"FOOD_INV_GOOGLE_CLIENT_SECRET",
+			"OPENTAB_GOOGLE_CLIENT_SECRET",
 		)
 		const googleCallbackUrl =
-			(yield* Config.string("FOOD_INV_API_URL")) +
+			(yield* Config.string("OPENTAB_API_URL")) +
 			(
 				"/api/auth/callback/:provider" satisfies (typeof Api)["groups"][string]["endpoints"][string]["path"]
 			).replace(":provider", "google")

@@ -33,7 +33,7 @@ const ReadMigrations = Effect.gen(function* () {
 
 const CreateDatabase = Effect.gen(function* () {
 	const sql = yield* PgClient.PgClient
-	const dbName = yield* Config.string("FOOD_INV_POSTGRES_DB")
+	const dbName = yield* Config.string("OPENTAB_POSTGRES_DB")
 
 	const initialized = yield* sql
 		.unsafe(`SELECT FROM pg_database WHERE datname = '${dbName}'`)
@@ -70,11 +70,11 @@ const RunMigrations = Effect.gen(function* () {
 
 export const MigrateDatabase = Effect.gen(function* () {
 	const connectionProperties = {
-		host: yield* Config.string("FOOD_INV_POSTGRES_HOST"),
-		port: yield* Config.int("FOOD_INV_POSTGRES_PORT"),
-		username: yield* Config.string("FOOD_INV_POSTGRES_USER"),
-		password: yield* Config.redacted("FOOD_INV_POSTGRES_PASSWORD"),
-		database: yield* Config.string("FOOD_INV_POSTGRES_DB"),
+		host: yield* Config.string("OPENTAB_POSTGRES_HOST"),
+		port: yield* Config.int("OPENTAB_POSTGRES_PORT"),
+		username: yield* Config.string("OPENTAB_POSTGRES_USER"),
+		password: yield* Config.redacted("OPENTAB_POSTGRES_PASSWORD"),
+		database: yield* Config.string("OPENTAB_POSTGRES_DB"),
 	}
 
 	yield* CreateDatabase.pipe(

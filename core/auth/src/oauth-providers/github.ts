@@ -77,12 +77,12 @@ const GithubUserToUser = GithubUserSchema.pipe(
 export const GithubOAuthProvider = Layer.effect(
 	OAuthProvider,
 	Effect.gen(function* () {
-		const githubClientId = yield* Config.string("FOOD_INV_GITHUB_CLIENT_ID")
+		const githubClientId = yield* Config.string("OPENTAB_GITHUB_CLIENT_ID")
 		const githubClientSecret = yield* Config.string(
-			"FOOD_INV_GITHUB_CLIENT_SECRET",
+			"OPENTAB_GITHUB_CLIENT_SECRET",
 		)
 		const githubCallbackUrl =
-			(yield* Config.string("FOOD_INV_API_URL")) +
+			(yield* Config.string("OPENTAB_API_URL")) +
 			(
 				"/api/auth/callback/:provider" satisfies (typeof Api)["groups"][string]["endpoints"][string]["path"]
 			).replace(":provider", "github")
@@ -100,7 +100,7 @@ export const GithubOAuthProvider = Layer.effect(
 				.get("https://api.github.com/user", {
 					headers: {
 						Authorization: `Bearer ${accessToken}`,
-						"User-Agent": "food-inv",
+						"User-Agent": "opentab",
 					},
 				})
 				.pipe(
@@ -122,7 +122,7 @@ export const GithubOAuthProvider = Layer.effect(
 				.get("https://api.github.com/user/emails", {
 					headers: {
 						Authorization: `Bearer ${accessToken}`,
-						"User-Agent": "food-inv",
+						"User-Agent": "opentab",
 					},
 				})
 				.pipe(

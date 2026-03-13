@@ -20,11 +20,11 @@ export const PgPoolClientLive = Layer.effect(
 	Effect.acquireRelease(
 		Effect.gen(function* () {
 			const connectionProperties: DbConnectionProperties = {
-				host: yield* Config.string("FOOD_INV_POSTGRES_HOST"),
-				port: yield* Config.int("FOOD_INV_POSTGRES_PORT"),
-				user: yield* Config.string("FOOD_INV_POSTGRES_USER"),
-				password: yield* Config.redacted("FOOD_INV_POSTGRES_PASSWORD"),
-				database: yield* Config.string("FOOD_INV_POSTGRES_DB"),
+				host: yield* Config.string("OPENTAB_POSTGRES_HOST"),
+				port: yield* Config.int("OPENTAB_POSTGRES_PORT"),
+				user: yield* Config.string("OPENTAB_POSTGRES_USER"),
+				password: yield* Config.redacted("OPENTAB_POSTGRES_PASSWORD"),
+				database: yield* Config.string("OPENTAB_POSTGRES_DB"),
 			}
 
 			yield* Effect.logInfo("[PgPoolClient] Creating pool client")

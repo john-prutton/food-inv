@@ -1,5 +1,5 @@
 {
-	"name": "food-inv",
+	"name": "opentab",
 	"scripts": {
 		"dev": "dotenv -e .env.dev -- turbo run dev",
 		"build": "turbo run build",

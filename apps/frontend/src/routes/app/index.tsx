@@ -1,30 +1,32 @@
+import { useAtomValue } from "@effect/atom-react"
 import { createFileRoute } from "@tanstack/react-router"
 
-import { SidebarTrigger } from "@repo/ui/components/sidebar"
+import type { Api } from "@repo/domain/api/index.js"
 
-import { SearchBar } from "@/components/dashboard/search-bar"
-import { ExpiringSoon } from "@/components/dashboard/sections/expiring-soon"
-import { StaplesSection } from "@/components/dashboard/sections/staples"
-import { StatCards } from "@/components/dashboard/sections/stat-cards"
+import { authAtom } from "@/lib/auth/atoms"
+
+const logoutUrl =
+	process.env.OPENTAB_API_URL! +
+	("/api/auth/logout" satisfies (typeof Api)["groups"][string]["endpoints"][string]["path"])
 
 export const Route = createFileRoute("/app/")({
 	component: RouteComponent,
 })
 
 function RouteComponent() {
+	const auth = useAtomValue(authAtom)
+
+	const name =
+		auth.state === "authenticated" || (auth.state === "loading" && auth.user)
+			? auth.user!.name
+			: "..."
+
 	return (
-		<div className="w-full">
-			<div className="w-full flex flex-row items-center p-2 pl-0 border-b">
-				<SidebarTrigger className="mx-[5px]" />
-
-				<SearchBar />
-			</div>
-
-			<main className="p-10 space-y-10">
-				<StatCards />
-				<ExpiringSoon />
-				<StaplesSection />
-			</main>
-		</div>
+		<main className="min-h-svh flex flex-col items-center justify-center gap-4">
+			<h1 className="text-2xl font-bold">Welcome, {name}!</h1>
+			<a href={logoutUrl} className="text-sm underline text-muted-foreground">
+				Log out
+			</a>
+		</main>
 	)
 }
