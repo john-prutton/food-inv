@@ -4,15 +4,13 @@ import * as Effect from "effect/Effect"
 import * as Layer from "effect/Layer"
 import * as Option from "effect/Option"
 import * as Schema from "effect/Schema"
-import * as SchemaGetter from "effect/SchemaGetter"
 import * as SchemaIssue from "effect/SchemaIssue"
 import { HttpClient, HttpClientResponse } from "effect/unstable/http"
-import * as HttpServerRequest from "effect/unstable/http/HttpServerRequest"
 
 import { generateState, GitHub } from "arctic"
 
 import type { Api } from "@repo/domain/api/index.js"
-import { UserSchema } from "@repo/domain/schema/user/index.js"
+import type { OAuthCallbackContext } from "@repo/domain/schema/auth/index.js"
 
 import { OAuthError, OAuthProvider } from "./index.js"
 
@@ -49,29 +47,6 @@ const GithubEmailsSchema = Schema.Struct({
 				Effect.succeed([{ email, primary: true, verified: true }]),
 		}),
 	),
-)
-
-const GithubUserSchema = Schema.Struct({
-	...GithubClaimsSchema.fields,
-	email: Schema.NonEmptyString,
-})
-
-const GithubUserToUser = GithubUserSchema.pipe(
-	Schema.decodeTo(UserSchema, {
-		decode: SchemaGetter.transform((claims) => ({
-			...claims,
-			id: claims.id.toString(),
-			avatarUrl: claims.avatar_url,
-			createdAt: 0,
-		})),
-
-		encode: SchemaGetter.fail(
-			() =>
-				new SchemaIssue.Forbidden(Option.none(), {
-					message: "Not implemented",
-				}),
-		),
-	}),
 )
 
 export const GithubOAuthProvider = Layer.effect(
@@ -134,7 +109,7 @@ export const GithubOAuthProvider = Layer.effect(
 					Effect.mapError(
 						(e) =>
 							new OAuthError({
-								message: `Failed to get Github user: ${e.message}`,
+								message: `Failed to get Github user emails: ${e.message}`,
 							}),
 					),
 				)
@@ -152,20 +127,18 @@ export const GithubOAuthProvider = Layer.effect(
 				}
 			}),
 
-			validateAuthorizationCallback: Effect.fnUntraced(function* (request) {
-				const url = HttpServerRequest.toURL(request)
-				if (!url)
-					return yield* new OAuthError({ message: "Invalid callback URL" })
-
-				const code = url.searchParams.get("code")
-				const state = url.searchParams.get("state")
+			validateAuthorizationCallback: Effect.fnUntraced(function* (
+				context: OAuthCallbackContext,
+			) {
+				const code = context.url.searchParams.get("code")
+				const state = context.url.searchParams.get("state")
 
 				if (!code || !state)
 					return yield* new OAuthError({
 						message: "Missing callback code or state",
 					})
 
-				const stateCookie = request.cookies["github_oauth_state"]
+				const stateCookie = context.cookies["github_oauth_state"]
 
 				if (!stateCookie)
 					return yield* new OAuthError({
@@ -184,19 +157,13 @@ export const GithubOAuthProvider = Layer.effect(
 				const claims = yield* GetClaims(accessToken)
 				const email = yield* GetEmail(accessToken)
 
-				const user = yield* Schema.decodeEffect(GithubUserToUser)({
-					...claims,
+				return {
+					provider: "github" as const,
+					providerUserId: String(claims.id),
 					email,
-				}).pipe(
-					Effect.mapError(
-						(e) =>
-							new OAuthError({
-								message: `Failed to construct user: ${e.message}`,
-							}),
-					),
-				)
-
-				return user
+					name: claims.name,
+					avatarUrl: claims.avatar_url,
+				}
 			}),
 		}
 	}),

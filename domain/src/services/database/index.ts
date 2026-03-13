@@ -22,7 +22,9 @@ export class Database extends ServiceMap.Service<
 
 		readonly user: {
 			readonly getUserByEmail: (email: Email) => DatabaseQuery<User | null>
-			readonly createUser: (user: Omit<User, "id">) => DatabaseQuery<User["id"]>
+			readonly createUser: (
+				user: Pick<User, "name" | "email" | "avatarUrl">,
+			) => DatabaseQuery<User["id"]>
 		}
 
 		readonly auth: {

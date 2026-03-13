@@ -1,9 +1,6 @@
-import * as Config from "effect/Config"
 import * as Effect from "effect/Effect"
 import * as Layer from "effect/Layer"
 import * as Redacted from "effect/Redacted"
-import * as HttpServerRequest from "effect/unstable/http/HttpServerRequest"
-import * as HttpServerResponse from "effect/unstable/http/HttpServerResponse"
 
 import { sha256 } from "@oslojs/crypto/sha2"
 import {
@@ -11,7 +8,7 @@ import {
 	encodeHexLowerCase,
 } from "@oslojs/encoding"
 
-import type { AuthToken } from "@repo/domain/schema/auth/index.js"
+import type { AuthToken, OAuthCallbackContext } from "@repo/domain/schema/auth/index.js"
 import {
 	Auth,
 	AuthError,
@@ -30,7 +27,6 @@ export const AuthLive = Layer.effect(
 	Auth,
 	Effect.gen(function* () {
 		const db = yield* Database
-		const isProduction = (yield* Config.string("NODE_ENV")) === "production"
 		const oauthProviders = yield* OAuthProviders.asEffect().pipe(
 			Effect.provide(OAuthProvidersLive),
 		)
@@ -45,16 +41,6 @@ export const AuthLive = Layer.effect(
 			Effect.sync(() => {
 				return encodeHexLowerCase(sha256(new TextEncoder().encode(token)))
 			})
-
-		const setSessionCookie = Effect.fn(function* (token: string) {
-			HttpServerResponse.setCookie("session", token, {
-				httpOnly: true,
-				secure: isProduction,
-				sameSite: "lax",
-				path: "/",
-				maxAge: `${SESSION_DURATION} millis`,
-			})
-		})
 
 		return {
 			createSession: Effect.fn(function* (userId) {
@@ -89,8 +75,6 @@ export const AuthLive = Layer.effect(
 							userSession.session.id,
 							new Date(Date.now() + SESSION_DURATION),
 						)
-
-						yield* setSessionCookie(token)
 
 						return {
 							user: userSession.user,
@@ -135,8 +119,6 @@ export const AuthLive = Layer.effect(
 				)
 			}),
 
-			setSessionCookie,
-
 			oauth: {
 				generateCookiesAndAuthorizationUrl: Effect.fn(function* (providerName) {
 					const provider = yield* oauthProviders
@@ -151,13 +133,7 @@ export const AuthLive = Layer.effect(
 				}),
 
 				validateAuthorizationCallback: Effect.fn(
-					function* (providerName, request) {
-						const url = HttpServerRequest.toURL(request)
-						if (!url)
-							return yield* new AuthError({
-								message: "Invalid OAuth callback URL",
-							})
-
+					function* (providerName, context: OAuthCallbackContext) {
 						const provider = yield* oauthProviders
 							.getProvider(providerName)
 							.pipe(
@@ -166,15 +142,13 @@ export const AuthLive = Layer.effect(
 								),
 							)
 
-						const user = yield* provider
-							.validateAuthorizationCallback(request)
+						return yield* provider
+							.validateAuthorizationCallback(context)
 							.pipe(
 								Effect.catchTag("OAuthError", ({ message }) =>
 									Effect.fail(new AuthError({ message })),
 								),
 							)
-
-						return user
 					},
 				),
 			},

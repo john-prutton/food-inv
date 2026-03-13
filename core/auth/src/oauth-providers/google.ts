@@ -1,11 +1,7 @@
 import * as Config from "effect/Config"
 import * as Effect from "effect/Effect"
 import * as Layer from "effect/Layer"
-import * as Option from "effect/Option"
 import * as Schema from "effect/Schema"
-import * as SchemaGetter from "effect/SchemaGetter"
-import * as SchemaIssue from "effect/SchemaIssue"
-import * as HttpServerRequest from "effect/unstable/http/HttpServerRequest"
 
 import {
 	decodeIdToken,
@@ -15,7 +11,7 @@ import {
 } from "arctic"
 
 import type { Api } from "@repo/domain/api/index.js"
-import { UserSchema } from "@repo/domain/schema/user/index.js"
+import type { OAuthCallbackContext } from "@repo/domain/schema/auth/index.js"
 
 import { OAuthError, OAuthProvider } from "./index.js"
 
@@ -25,26 +21,6 @@ const GoogleClaimsSchema = Schema.Struct({
 	name: Schema.NonEmptyString,
 	picture: Schema.NonEmptyString,
 })
-
-const GoogleClaimsToUser = GoogleClaimsSchema.pipe(
-	Schema.decodeTo(UserSchema, {
-		decode: SchemaGetter.transform((claims) => ({
-			...claims,
-			id: claims.sub,
-			avatarUrl: claims.picture,
-			createdAt: 0,
-		})),
-
-		encode: SchemaGetter.fail(
-			() =>
-				new SchemaIssue.Forbidden(Option.none(), {
-					message: "Not implemented",
-				}),
-		),
-	}),
-)
-
-const DecodeClaimsToUser = Schema.decodeUnknownEffect(GoogleClaimsToUser)
 
 export const GoogleOAuthProvider = Layer.effect(
 	OAuthProvider,
@@ -86,21 +62,19 @@ export const GoogleOAuthProvider = Layer.effect(
 				}
 			}),
 
-			validateAuthorizationCallback: Effect.fnUntraced(function* (request) {
-				const url = HttpServerRequest.toURL(request)
-				if (!url)
-					return yield* new OAuthError({ message: "Invalid callback URL" })
-
-				const code = url.searchParams.get("code")
-				const state = url.searchParams.get("state")
+			validateAuthorizationCallback: Effect.fnUntraced(function* (
+				context: OAuthCallbackContext,
+			) {
+				const code = context.url.searchParams.get("code")
+				const state = context.url.searchParams.get("state")
 
 				if (!code || !state)
 					return yield* new OAuthError({
 						message: "Missing callback code or state",
 					})
 
-				const codeCookie = request.cookies["google_oauth_code_verifier"]
-				const stateCookie = request.cookies["google_oauth_state"]
+				const codeCookie = context.cookies["google_oauth_code_verifier"]
+				const stateCookie = context.cookies["google_oauth_state"]
 
 				if (!codeCookie || !stateCookie)
 					return yield* new OAuthError({
@@ -116,8 +90,10 @@ export const GoogleOAuthProvider = Layer.effect(
 						new OAuthError({ message: `Failed to verify code: ${e}` }),
 				})
 
-				const claims = decodeIdToken(token.idToken())
-				const user = yield* DecodeClaimsToUser(claims).pipe(
+				const rawClaims = decodeIdToken(token.idToken())
+				const claims = yield* Schema.decodeUnknownEffect(GoogleClaimsSchema)(
+					rawClaims,
+				).pipe(
 					Effect.catchTag("SchemaError", (e) =>
 						Effect.fail(
 							new OAuthError({
@@ -127,7 +103,13 @@ export const GoogleOAuthProvider = Layer.effect(
 					),
 				)
 
-				return user
+				return {
+					provider: "google" as const,
+					providerUserId: claims.sub,
+					email: claims.email,
+					name: claims.name,
+					avatarUrl: claims.picture,
+				}
 			}),
 		}
 	}),

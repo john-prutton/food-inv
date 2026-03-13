@@ -1,11 +1,16 @@
 import * as Effect from "effect/Effect"
 import * as Schema from "effect/Schema"
 import * as ServiceMap from "effect/ServiceMap"
-import * as HttpServerRequest from "effect/unstable/http/HttpServerRequest"
 import * as HttpApiMiddleware from "effect/unstable/httpapi/HttpApiMiddleware"
 import * as HttpApiSecurity from "effect/unstable/httpapi/HttpApiSecurity"
 
-import type { AuthToken, OAuthProvider, Session } from "@/schema/auth/index.js"
+import type {
+	AuthToken,
+	OAuthCallbackContext,
+	OAuthProvider,
+	OAuthUser,
+	Session,
+} from "@/schema/auth/index.js"
 import type { User } from "@/schema/user/index.js"
 
 export class AuthError extends Schema.TaggedErrorClass<AuthError>()(
@@ -50,8 +55,6 @@ export class Auth extends ServiceMap.Service<
 			userId: User["id"],
 		) => Effect.Effect<void, AuthError>
 
-		readonly setSessionCookie: (token: AuthToken) => Effect.Effect<void>
-
 		oauth: {
 			readonly generateCookiesAndAuthorizationUrl: (
 				provider: OAuthProvider,
@@ -65,8 +68,8 @@ export class Auth extends ServiceMap.Service<
 
 			readonly validateAuthorizationCallback: (
 				provider: OAuthProvider,
-				request: HttpServerRequest.HttpServerRequest,
-			) => Effect.Effect<User, AuthError>
+				context: OAuthCallbackContext,
+			) => Effect.Effect<OAuthUser, AuthError>
 		}
 	}
 >()("Auth") {}

@@ -21,7 +21,7 @@ export const DatabaseFake = Layer.succeed(
 			deleteSessionsForUser: () => Effect.void,
 		},
 		user: {
-			createUser: () => Effect.succeed("user-id"),
+			createUser: (_user) => Effect.succeed("user-id"),
 			getUserByEmail: () =>
 				Effect.succeed({
 					id: "",

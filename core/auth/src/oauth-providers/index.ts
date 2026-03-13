@@ -1,10 +1,12 @@
 import * as Effect from "effect/Effect"
 import * as Schema from "effect/Schema"
 import * as ServiceMap from "effect/ServiceMap"
-import * as HttpServerRequest from "effect/unstable/http/HttpServerRequest"
 
+import type {
+	OAuthCallbackContext,
+	OAuthUser,
+} from "@repo/domain/schema/auth"
 import type { OAuthProvider as OAuthProviderName } from "@repo/domain/schema/auth"
-import { type User } from "@repo/domain/schema/user"
 
 export class OAuthError extends Schema.TaggedErrorClass<OAuthError>()(
 	"OAuthError",
@@ -21,8 +23,8 @@ export class OAuthProvider extends ServiceMap.Service<
 			url: string
 		}>
 		readonly validateAuthorizationCallback: (
-			request: HttpServerRequest.HttpServerRequest,
-		) => Effect.Effect<User, OAuthError>
+			context: OAuthCallbackContext,
+		) => Effect.Effect<OAuthUser, OAuthError>
 	}
 >()("OAuthProvider") {}
 

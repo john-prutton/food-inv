@@ -3,6 +3,7 @@ import * as Effect from "effect/Effect"
 import * as Layer from "effect/Layer"
 import * as HttpEffect from "effect/unstable/http/HttpEffect"
 import * as HttpServerError from "effect/unstable/http/HttpServerError"
+import * as HttpServerRequest from "effect/unstable/http/HttpServerRequest"
 import * as HttpServerResponse from "effect/unstable/http/HttpServerResponse"
 import * as HttpApiBuilder from "effect/unstable/httpapi/HttpApiBuilder"
 
@@ -90,22 +91,41 @@ const AuthApiGroupLive = HttpApiBuilder.group(Api, "auth", (handler) =>
 								),
 							),
 						)) === "production"
+
+				const url = HttpServerRequest.toURL(request)
+				if (!url)
+					return yield* new AuthError({
+						message: "Invalid OAuth callback URL",
+					})
+
 				const auth = yield* Auth
-				const { id: providerUserId, ...oauthUser } =
-					yield* auth.oauth.validateAuthorizationCallback(provider, request)
+				const oauthUser = yield* auth.oauth.validateAuthorizationCallback(
+					provider,
+					{ url, cookies: request.cookies },
+				)
 
 				const db = yield* Database
 				let user = yield* db.user.getUserByEmail(oauthUser.email)
 
 				if (user === null) {
-					const userId = yield* db.user.createUser(oauthUser)
-					user = { id: userId, ...oauthUser }
+					const userId = yield* db.user.createUser({
+						name: oauthUser.name ?? oauthUser.email,
+						email: oauthUser.email,
+						avatarUrl: oauthUser.avatarUrl ?? null,
+					})
+					user = {
+						id: userId,
+						name: oauthUser.name ?? oauthUser.email,
+						email: oauthUser.email,
+						avatarUrl: oauthUser.avatarUrl ?? null,
+						createdAt: new Date(),
+					}
 				}
 
 				yield* db.auth.recordUserOAuthProvider(
 					user.id,
-					providerUserId,
-					provider,
+					oauthUser.providerUserId,
+					oauthUser.provider,
 				)
 
 				const { token, session } = yield* auth.createSession(user.id)

@@ -28,11 +28,11 @@ export const DatabaseLive = Layer.effect(
 			healthCheck: () => TryQuery(db.execute("select 1").then(() => true)),
 
 			user: {
-				createUser: (user) =>
+				createUser: ({ name, email, avatarUrl }) =>
 					TryQuery(
 						db
 							.insert(usersTable)
-							.values(user)
+							.values({ name, email, avatarUrl })
 							.returning()
 							.then(([user]) => user!.id),
 					),

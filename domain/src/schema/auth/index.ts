@@ -2,6 +2,11 @@ import * as Schema from "effect/Schema"
 
 import { EmailSchema, UserSchema } from "../user/index.js"
 
+export type OAuthCallbackContext = {
+	readonly url: URL
+	readonly cookies: Readonly<Record<string, string>>
+}
+
 export type AuthToken = typeof AuthTokenSchema.Type
 export const AuthTokenSchema = Schema.NonEmptyString
 
