@@ -55,14 +55,17 @@ const RunMigrations = Effect.gen(function* () {
 	> = {}
 
 	for (let i = 0; i < migrations.length; i++) {
-		const migrationName = `${i}`.padStart(4, "0")
+		const migrationName = `${i + 1}_migration-${i + 1}`
 		const migration = migrations[i]!
 		migrationsRecord[migrationName] = sql.unsafe(migration)
 	}
 
-	yield* Effect.log("Migrations", migrations)
+	const resolvedMigrations = yield* PgMigrator.run({
+		loader: PgMigrator.fromRecord(migrationsRecord),
+		table: "__migrations",
+	})
 
-	yield* PgMigrator.fromRecord(migrationsRecord)
+	yield* Effect.log("Finished migrations", resolvedMigrations)
 })
 
 export const MigrateDatabase = Effect.gen(function* () {
@@ -85,9 +88,7 @@ export const MigrateDatabase = Effect.gen(function* () {
 	)
 
 	yield* RunMigrations.pipe(
-		Effect.scoped,
 		Effect.provide(PgClient.layer(connectionProperties)),
+		Effect.scoped,
 	)
-
-	yield* Effect.addFinalizer((exit) => Effect.log("Done with migrations"))
 }).pipe(Effect.scoped)

@@ -14,5 +14,32 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
+  gateway-init:
+    image: busybox
+    container_name: gateway-int
+    environment:
+      - HOST=postgres
+      - PORT=5432
+      - USER=admin
+      - PASSWORD=root
+      - DATABASE=food-inv-db
+    command: >
+      sh -c 'echo "{\"id\":\"1726ba2b-2dbb-4488-a943-f2777ad66bb6\",\"slots\":[[\"1fe8ee54-2365-41a6-b75e-81e8b96deb68\",{\"id\":\"1fe8ee54-2365-41a6-b75e-81e8b96deb68\",\"name\":\"test\",\"dialect\":\"postgresql\",\"credentials\":{\"host\":\"$$HOST\",\"port\":\"$$PORT\",\"user\":\"$$USER\",\"password\":\"$$PASSWORD\",\"database\":\"$$DATABASE\",\"ssl\":false}}]],\"name\":\"Black Boomer\"}" > /app/store.json'
+    volumes:
+      - gateway-data:/app
+
+  gateway:
+    depends_on:
+      - gateway-init
+    profiles:
+      - dev
+    image: ghcr.io/drizzle-team/gateway:latest
+    container_name: gateway
+    ports:
+      - 4983:4983
+    volumes:
+      - gateway-data:/app
+
 volumes:
   postgres-data:
+  gateway-data:

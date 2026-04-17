@@ -22,6 +22,8 @@ const localDeps = await readFile(join(process.cwd(), "./package.json"))
 	.then((deps) => Object.keys(deps))
 	.then((deps) => deps.filter((dep) => dep.startsWith("@repo/")))
 
+console.log("[DepWatcher] Watching deps", localDeps)
+
 const distFolders = localDeps.map((dep) => [
 	dep,
 	join(process.cwd(), "node_modules", dep, "dist"),
